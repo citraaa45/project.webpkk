@@ -1,5 +1,5 @@
-# PROJECT APLIKASI RITSHU
-Anggota :
+# PROJECT APLIKASI RITSHU  
+Anggota :  
 -Citra Chaeruny  
 -Fahrotunnida Mauludia  
 -Sharliz Adina  
