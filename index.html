@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="allwrap">
+        <div class="parent">
+            <div style="width: 100%;">
+                <div class="navbar">
+                    <div>
+                        <img class="logo" src="logo.png" alt="">
+                    </div>
+                    <div class="navbar-left">
+                        <div class="displaytext">
+                            <h1 style="text-shadow: 2px 2px black; margin-top: 25px;margin-left: 10px;">🐣RITSU🐣
+                            </h1>
+                        </div>
+                        <div class="navbar-right">
+                            <a href="#Alamat" class="navbar-button">Alamat</a>
+                            <a href="#pesan" class="navbar-button">Pesan</a>
+
+                            <a href="javascript:void(0)" onclick="toggleCart()" class="icon keranjang"
+                                style="position: relative;">
+                                <img class="ikon keranjang" src="keranjang.png" alt="">
+                                <span id="cart-badge" class="cart-badge">0</span>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+                <div id="side-cart" class="side-cart">
+                    <div class="side-cart-header">
+                        <h2>Keranjang Belanja</h2>
+                        <button class="close-cart" onclick="toggleCart()">✖</button>
+                    </div>
+                    <div id="cart-items"></div>
+                    <div style="margin-top: 20px; text-align:center;">
+                        <button onclick="CheckoutToWhatsapp()" class="checkout">
+                            PESAN
+                        </button>
+                    </div>
+
+                </div>
+
+                <div style="text-align: center;margin-top: 150px;">
+                    <div class="wraptext">
+                        <h1>RICE BOWL CHICKEN KATSU</h1>
+                        <p>"semangkok nasi dengan perpaduan chicken katsu diatasnya ditambah dengan sayuran kol & wortel
+                            yang dapat dicampur dengan saus mayo cocok menjadi santapan yang mengenyangkan"</p>
+                    </div>
+                </div>
+
+                <div style="align-items: center;justify-content: center;display: flex;">
+                    <div class="wrapcontent">
+                        <div class="product-area">
+                            <div id="product-list" class="products-card"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contenttext">
+                    <h1>BAHAN YANG KAMI GUNAKAN TENTUNYA PREMIUM</h1>
+                </div>
+
+                <div class="content2">
+                    <div class="wraptext2">
+                        <h1>PASTINYA AKAN MEMBUAT PERUTMU KENYANG KARNA PORSI YANG MEMUASKAN DAN HARGA TERJANGKAU</h1>
+                    </div>
+                    <div style="padding-block: 30px;">
+                        <img class="image image2" src="chicken.jpg" alt="">
+                    </div>
+                </div>
+
+                <div class="content3">
+                    <div style="width: 100%;text-align: end;">
+                        <img style="width: 100%;" src="lastimg.png" alt="">
+                    </div>
+                    <div class="container1">
+                        <div id="Alamat" class="addres">Alamat kami:</div>
+                        <div class="map-container">
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3965.0542301721275!2d107.4569362749917!3d-6.387003393603428!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zNsKwMjMnMTMuMiJTIDEwN8KwMjcnMzQuMiJF!5e0!3m2!1sid!2sid!4v1748781182241!5m2!1sid!2sid"
+                                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <div class="social-media">
+                        <h2>Contact & Social Media</h2>
+                        <div class="icons">
+                            <a href="https://youtube.com/@riitsu.26?si=J7RPAD_Y_wmaaJQu" target="_blank"
+                                class="icon yt">
+                                <img class="ikon youtube" src="yt.png" alt="">
+                            </a>
+                            <a href="https://www.instagram.com/riitsu.26?igsh=MXq2YzIyOTB2OTA0ZQ==" target="_blank"
+                                class="icon ig">
+                                <img class="ikon instagram" src="ikon ig.png" alt="">
+                            </a>
+                            <a style="width: 50px;height: 50px;margin-top:-10px;" href="https://wa.me/6289650022527"
+                                target="_blank" class="icon wa">
+                                <img class="ikon wa" src="wa.png" alt="">
+                            </a>
+                            <a style="width: 25px;height: 25px;margin-right: 10px;" href="mailto:ricekatsu26@gmail.com"
+                                target="_blank" class="icon yt">
+                                <img class="ikon email" src="email.png" alt="">
+                            </a>
+                            <a href="https://www.facebook.com/profile.php?id=100064115794205" target="_blank"
+                                class="icon facebook">
+                                <img class="ikon facebook" src="facebook.png" alt="">
+                            </a>
+                            <a href="https://www.tiktok.com/@riitsu00?_t=ZS-8wjAfyt7hE0&_r=1" target="_blank"
+                                class="icon tiktok">
+                                <img class="ikon tiktok" src="tiktok.png" alt="">
+                            </a>
+                            <a style="width: 40px;height: 40px;margin-top: -7px;" href="https://shopee.co.id/ritshu26"
+                                target="_blank" class="icon tiktok">
+                                <img class="ikon shoope" src="shoope.png" alt="">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
