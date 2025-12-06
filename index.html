@@ -17,20 +17,18 @@
                         <img class="logo" src="logo.png" alt="">
                     </div>
                     <div class="navbar-left">
-                        <div class="displaytext">
-                            <h1 style="text-shadow: 2px 2px black; margin-top: 25px;margin-left: 10px;">🐣RITSU🐣
-                            </h1>
-                        </div>
                         <div class="navbar-right">
-                            <a href="#Alamat" class="navbar-button">Alamat</a>
-                            <a href="#pesan" class="navbar-button">Pesan</a>
 
                             <a href="javascript:void(0)" onclick="toggleCart()" class="icon keranjang"
                                 style="position: relative;">
                                 <img class="ikon keranjang" src="keranjang.png" alt="">
                                 <span id="cart-badge" class="cart-badge">0</span>
                             </a>
-
+                            <a href="" onclick="" class="icon keranjang"
+                                style="position: relative;">
+                                <img class="ikon keranjang" src="login.png" alt="">
+                                <span id="cart-badge" class="cart-badge">0</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -41,23 +39,23 @@
                     </div>
                     <div id="cart-items"></div>
                     <div style="margin-top: 20px; text-align:center;">
-                        <button onclick="CheckoutToWhatsapp()" class="checkout">
-                            PESAN
-                        </button>
+                        <button onclick="checkoutToTransaksi()" class="checkout">CHECKOUT</button>
                     </div>
 
-                </div>
-
-                <div style="text-align: center;margin-top: 150px;">
-                    <div class="wraptext">
-                        <h1>RICE BOWL CHICKEN KATSU</h1>
-                        <p>"semangkok nasi dengan perpaduan chicken katsu diatasnya ditambah dengan sayuran kol & wortel
-                            yang dapat dicampur dengan saus mayo cocok menjadi santapan yang mengenyangkan"</p>
                     </div>
+                        <div class="top">
+                        <img src="top.png" alt=""  style="width:100%;height: 350px;margin-top: -25px;">
+                         <div class="wraptext">
+                                <a href="#product" class="top-button">Beli Sekarang</a>
+                        </div>
+                    </div>
+
+                <div style="margin-top: 200px;"    class="contenttext">
+                    <h1>"Dengan semangkuk nasi hangat dan ayam katsu yang crispy di luar dan juicy di dalam"</h1>
                 </div>
 
-                <div style="align-items: center;justify-content: center;display: flex;">
-                    <div class="wrapcontent">
+                <div style="margin-top:100px;justify-content: center;display: flex;">
+                    <div id="product"  class="wrapcontent">
                         <div class="product-area">
                             <div id="product-list" class="products-card"></div>
                         </div>

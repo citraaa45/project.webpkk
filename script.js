@@ -105,8 +105,8 @@ function updateKeranjang() {
             <p>Total: Rp ${(item.price * item.quantity).toLocaleString()}</p>
 
             <div>
-                <button class="quantity-btn btn-minus" onclick="kurangiQty('${item.id}')">-</button>
-                <button class="quantity-btn btn-plus" onclick="tambahQty('${item.id}')">+</button>
+                <button class="btn-minus" onclick="kurangiQty('${item.id}')">-</button>
+                <button class="btn-plus" onclick="tambahQty('${item.id}')">+</button>
                 <button class="btn-delete" onclick="hapusItem('${item.id}')">🗑️</button>            </div>
         `;
         cartContainer.appendChild(itemDiv);
