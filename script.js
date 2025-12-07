@@ -3,21 +3,6 @@ function toggleCart() {
     document.getElementById("side-cart").classList.toggle("open");
 }
 
-// ================ BADGE JUMLAH KERANJANG ==================
-function updateBadge() {
-    const badge = document.getElementById("cart-badge");
-    const totalQty = cart.reduce((a, b) => a + b.quantity, 0);
-
-    if (totalQty > 0) {
-        badge.style.display = "block";
-        badge.innerText = totalQty;
-    } else {
-        badge.style.display = "none";
-        badge.innerText = "0";
-    }
-}
-
-
 // ================ DATA PRODUK ==================
 const product = [
     {
@@ -27,7 +12,6 @@ const product = [
         price: 12000
     }
 ];
-
 
 // ================ KERANJANG ====================
 let cart = [];
@@ -43,27 +27,40 @@ function loadCart() {
     cart = saved ? JSON.parse(saved) : [];
 }
 
+// ================ BADGE JUMLAH ==================
+function updateBadge() {
+    const badge = document.getElementById("cart-badge");
+    if (!badge) return;
+
+    const totalQty = cart.reduce((a, b) => a + b.quantity, 0);
+
+    if (totalQty > 0) {
+        badge.style.display = "block";
+        badge.innerText = totalQty;
+    } else {
+        badge.style.display = "none";
+        badge.innerText = "0";
+    }
+}
 
 // ================ TAMPILKAN PRODUK ==================
 const divContainer = document.getElementById("product-list");
 
 if (divContainer) {
-    product.forEach(function (data) {
+    product.forEach(data => {
         const card = document.createElement("div");
         card.className = "product-card";
         card.innerHTML = `
             <img src="${data.image}" alt="${data.name}">
-            <h1>${data.name}</h1>
-            <p>Harga: Rp ${data.price.toLocaleString()}</p>
-
+            <h1 class="name">${data.name}</h1>
+            <h3 class="price" >Harga: Rp ${data.price.toLocaleString()}</h3>
             <button class="btn-keranjang" onclick="tambahkeranjang('${data.id}')">
-                Simpan ke Keranjang
+                Masukan Keranjang
             </button>
         `;
         divContainer.append(card);
     });
 }
-
 
 // ================ AREA KERANJANG ====================
 const cartContainer = document.getElementById("cart-items");
@@ -75,10 +72,7 @@ function tambahkeranjang(id) {
     if (cek) {
         cek.quantity++;
     } else {
-        cart.push({
-            ...produk,
-            quantity: 1
-        });
+        cart.push({ ...produk, quantity: 1 });
     }
 
     saveCart();
@@ -104,10 +98,9 @@ function updateKeranjang() {
             <p>Rp ${item.price.toLocaleString()} x ${item.quantity}</p>
             <p>Total: Rp ${(item.price * item.quantity).toLocaleString()}</p>
 
-            <div>
-                <button class="btn-minus" onclick="kurangiQty('${item.id}')">-</button>
-                <button class="btn-plus" onclick="tambahQty('${item.id}')">+</button>
-                <button class="btn-delete" onclick="hapusItem('${item.id}')">🗑️</button>            </div>
+            <button class="quantity-btn btn-minus" onclick="kurangiQty('${item.id}')">-</button>
+            <button class="quantity-btn btn-plus" onclick="tambahQty('${item.id}')">+</button>
+            <button class="btn-delete" onclick="hapusItem('${item.id}')">🗑</button>
         `;
         cartContainer.appendChild(itemDiv);
     });
@@ -151,23 +144,48 @@ function hapusItem(id) {
     updateBadge();
 }
 
-// ================ CHECKOUT WHATSAPP ====================
-function CheckoutToWhatsapp() {
-    let pesan = "Halo kak, saya mau pesan:\n";
-
-    cart.forEach((item, index) => {
-        pesan += `${index + 1}. ${item.name} x ${item.quantity}\n`;
-    });
-
-    const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
-    pesan += `Total: Rp ${total.toLocaleString()}`;
-
-    const encoded = encodeURIComponent(pesan);
-    window.open(`https://wa.me/6289650022527?text=${encoded}`, "_blank");
+// ================ PINDAH TRANSAKSI ==================
+function checkoutToTransaksi() {
+    if (cart.length === 0) {
+        alert("Keranjang masih kosong!");
+        return;
+    }
+    window.location.href = "transaksi.html";
 }
-
 
 // ================ LOAD AWAL ====================
 loadCart();
 updateKeranjang();
 updateBadge();
+
+// ================ Notifikasi ===================
+window.onload = function () {
+    if (localStorage.getItem("loginSuccess") === "true") {
+        alert("Login berhasil, selamat berbelanja!");
+        localStorage.removeItem("loginSuccess");
+    }
+};
+
+
+function showToast(msg) {
+    let div = document.createElement("div");
+    div.className = "notification";
+    div.innerText = msg;
+    document.body.appendChild(div);
+
+    // Hapus notif setelah animasi selesai (3 detik)
+    setTimeout(() => {
+        div.remove();
+    }, 3000);
+}
+
+window.onload = function () {
+
+    if (localStorage.getItem("loginSuccess") === "true") {
+
+        showToast("✔ Login berhasil — Selamat berbelanja!");
+
+        localStorage.removeItem("loginSuccess");
+    }
+};
+
