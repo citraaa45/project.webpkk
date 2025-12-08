@@ -1,102 +1,143 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Data Tables Ajax — Contoh</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; }
-    .container{
-        
-    }
-    .btn {
-      display: inline-block;
-      padding: 6px 12px;
-      border-radius: 4px;
-      color: white;
-      text-decoration: none;
-      font-size: 14px;
-      margin: 2px;
-    }
-    .btn-add { background-color: #28a745; }  /* hijau */
-    .btn-edit { background-color: #28a745; }
-    .btn-delete { background-color: #dc3545; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
-    }
-    table thead {
-      background: #f1f1f1;
-    }
-    table th, table td {
-      padding: 10px;
-      border: 1px solid #ddd;
-      text-align: left;
-      vertical-align: middle;
-    }
-    table th {
-      font-weight: bold;
-    }
-    table img {
-      width: 48px;
-      height: 48px;
-      object-fit: cover;
-      border-radius: 4px;
-    }
-  </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Data Tables Ajax — Contoh</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+
+        .container {
+            margin-top: 20px;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 14px;
+
+            /* Shadow lembut */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+            /* Border halus */
+            border: 1px solid #e5e5e5;
+
+            /* Animasi efek saat hover */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 4px;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            margin: 2px;
+        }
+
+        .btn-add {
+            background-color: #28a745;
+        }
+
+        /* hijau */
+        .btn-edit {
+            background-color: #28a745;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        table thead {
+            background: #f1f1f1;
+        }
+
+        table th,
+        table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        table th {
+            font-weight: bold;
+        }
+
+        table img {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+    </style>
 </head>
+
 <body>
 
-  <h2>DATA PRODUK</h2>
+    <h2>DATA PRODUK</h2>
 
-  <a href="#" class="btn btn-add">+ Tambah Data</a>
-<div class="container">
-  <table id="myTable">
-    <thead>
-      <tr>
-        <th>id_produk</th>
-        <th>nama_produk</th>
-        <th>harga_produk</th>
-        <th>stok_produk</th>
-         <td>action</td>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td>rice bowl chicken katsu</td>
-        <td>20</td>
-        <td>12</td>
-        <td>
-          <a href="#" class="btn btn-edit">Edit</a>
-          <a href="#" class="btn btn-delete">Delete</a>
-        </td>
-      
-      <!-- Tambah baris lainnya sesuai kebutuhan -->
-    </tbody>
-  </table>
-</div>
-  <script>
-    // Contoh script untuk tombol Delete — akan hapus baris saat diklik
-    document.querySelectorAll('.btn-delete').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const row = this.closest('tr');
-        row.remove();
-        // Optionally: update nomor urut (No.) setelah delete
-        updateNumbering();
-      });
-    });
+    <a href="#" class="btn btn-add">+ Tambah Data</a>
+    <div class="container">
+        <table id="myTable">
+            <thead>
+                <tr>
+                    <th>id_produk</th>
+                    <th>nama_produk</th>
+                    <th>harga_produk</th>
+                    <th>stok_produk</th>
+                    <td>action</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>rice bowl chicken katsu</td>
+                    <td>20</td>
+                    <td>12</td>
+                    <td>
+                        <a href="#" class="btn btn-edit">Edit</a>
+                        <a href="#" class="btn btn-delete">Delete</a>
+                    </td>
 
-    function updateNumbering() {
-      const rows = document.querySelectorAll('#myTable tbody tr');
-      rows.forEach((r, i) => {
-        r.cells[0].innerText = i + 1;
-      });
-    }
-  </script>
+                    
+            </tbody>
+        </table>
+    </div>
+    <script>
+        // Contoh script untuk tombol Delete — akan hapus baris saat diklik
+        document.querySelectorAll('.btn-delete').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const row = this.closest('tr');
+                row.remove();
+                // Optionally: update nomor urut (No.) setelah delete
+                updateNumbering();
+            });
+        });
+
+        function updateNumbering() {
+            const rows = document.querySelectorAll('#myTable tbody tr');
+            rows.forEach((r, i) => {
+                r.cells[0].innerText = i + 1;
+            });
+        }
+    </script>
 
 </body>
+
 </html>
