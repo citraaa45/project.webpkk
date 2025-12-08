@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Transaksi - Ayam Katsu</title>
+    <style>
+        body {
+            font-family: "Poppins", Arial, sans-serif;
+            padding: 25px;
+            background: linear-gradient(270deg, #fbc531, #e17055, #ce7100);
+            background-size: 400% 400%;
+            animation: wave 10s ease infinite;
+        }
+
+        @keyframes wave {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .btn-home {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: #a64200;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 999;
+            font-weight: bold;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+            transition: 0.2s;
+        }
+
+        .btn-home:hover {
+            background: #8c3700;
+            transform: scale(1.05);
+        }
+
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            width: 95%;
+            max-width: 480px;
+            margin: auto;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+            animation: fadeIn .8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 22px;
+            color: #8d4b25;
+            letter-spacing: 1px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 12px;
+            font-size: 15px;
+        }
+
+        input {
+            width: 450px;
+            padding: 12px;
+            margin-top: 6px;
+            font-size: 15px;
+            border-radius: 10px;
+            border: 1px solid #bfbfbf;
+            background: #fafafa;
+        }
+
+        .btn-pesan {
+            margin-top: 25px;
+            padding: 14px;
+            background: #d35400;
+            color: white;
+            font-size: 17px;
+            border: none;
+            border-radius: 12px;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-pesan:hover {
+            background: #b84300;
+            transform: scale(1.03);
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="btn-home" onclick="back()">⬅</button>
+
+    <div class="container">
+
+        <h2>TRANSAKSI</h2>
+
+        <label>ID Pembeli</label>
+        <input type="text" id="idPembeli" readonly>
+
+        <label>Nama Produk</label>
+        <input type="text" value="Rice Bowl Chicken Katsu" readonly>
+
+        <label>Harga Produk</label>
+        <input type="text" value="12000" readonly>
+
+        <label>Jumlah Produk</label>
+        <input type="text" id="jumlahProduk" readonly>
+
+        <label>Total Harga</label>
+        <input type="text" id="totalHarga" readonly>
+
+        <label>Status Produk</label>
+        <input type="text" id="statusProduk" readonly>
+
+        <button class="btn-pesan" onclick="back()">Buat Pesanan</button>
+
+    </div>
+
+<script>
+    function back() {
+        window.location.href = "index.html";
+    }
+
+    // ⬇ Ambil data dari LocalStorage
+    const id = localStorage.getItem("userID");  
+    const jumlah = localStorage.getItem("transaksiJumlah");
+    const total = localStorage.getItem("transaksiTotal");
+
+    // ⬇ Set Status Default
+    const status = "Menunggu Konfirmasi Admin";
+
+    // ⬇ Tampilkan ke input
+    document.getElementById("idPembeli").value = id || "";
+    document.getElementById("jumlahProduk").value = jumlah || "";
+    document.getElementById("statusProduk").value = status;
+
+    // ⬇ Format Total Harga
+    document.getElementById("totalHarga").value =
+        total ? "Rp " + Number(total).toLocaleString() : "";
+</script>
+
+</body>
+</html>

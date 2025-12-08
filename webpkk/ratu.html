@@ -1,0 +1,27 @@
+<script>
+    const nomorWA = "6285923507376"; // nomor kamu
+    const total = 12000;
+
+    function bayar() {
+        const metode = document.querySelector('input[name="pay"]:checked');
+        
+        if (!metode) {
+            alert("Pilih metode pembayaran dulu!");
+            return;
+        }
+
+        const pesan = 
+`Halo, saya ingin melakukan pembayaran.
+
+Produk: Makanan Enak
+Jumlah: 1
+Total: Rp 12.000
+Metode Pembayaran: ${metode.value}
+
+Nama:
+Alamat:
+`;
+
+        window.open(`https://wa.me/${nomorWA}?text=${encodeURIComponent(pesan)}`);
+    }
+</script>
