@@ -33,6 +33,14 @@ app.get('/transaksi', (req, res) => {
   res.render('transaksi')
 })
 
+app.get('/data_produk', (req, res) => {
+  res.render('admin/data_produk')
+})
+
+app.get('/tambah_produk', (req, res) => {
+  res.render('admin/tambah_produk')
+})
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
