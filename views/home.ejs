@@ -57,22 +57,25 @@
                     <div id="product" class="wrapcontent">
                         <div class="product-area">
                             <div id="product-list" class="products-card">
-                                    <% for(produk of data) { %>
-                                        <div class="product-card">
-                                            <img src="" alt="">
-                                            <h1 class="name"><%= produk.nama_produk %></h1>
-                                            <h3 class="price">Harga: Rp <%= produk.harga_produk %></h3>
-                                            <button class="btn-keranjang" onclick="tambahkeranjang({
+                                <% for(produk of data) { %>
+                                    <div class="product-card">
+                                        <img src="" alt="">
+                                        <h1 class="name">
+                                            <%= produk.nama_produk %>
+                                        </h1>
+                                        <h3 class="price">Harga: Rp <%= produk.harga_produk %>
+                                        </h3>
+                                        <button class="btn-keranjang" onclick="tambahkeranjang({
                                              id : '<%= produk.id_produk %>',
                                              name :'<%= produk.nama_produk %>',
                                              price : '<%= produk.harga_produk %>',
                                              quantity : '<%= produk.stok_produk %>'
                                             })">
-                                                Masukan Keranjang
-                                            </button>
-                                        </div>
+                                            Masukan Keranjang
+                                        </button>
+                                    </div>
                                     <% } %>
-                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

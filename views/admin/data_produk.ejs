@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Data Tables Ajax — Contoh</title>
+    <title>Data Produk + Omset</title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,41 +14,26 @@
         }
 
         .container {
-            margin-top: 20px;
             background: #ffffff;
             padding: 25px;
             border-radius: 14px;
-
-            /* Shadow lembut */
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-
-            /* Border halus */
             border: 1px solid #e5e5e5;
-
-            /* Animasi efek saat hover */
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .container:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+            margin-bottom: 20px;
         }
 
         .btn {
             display: inline-block;
-            padding: 6px 12px;
+            padding: 7px 14px;
             border-radius: 4px;
             color: white;
             text-decoration: none;
             font-size: 14px;
-            margin: 2px;
+            margin: 4px 3px;
+            cursor: pointer;
         }
 
-        .btn-add {
-            background-color: #28a745;
-        }
-
-        /* hijau */
+        .btn-add,
         .btn-edit {
             background-color: #28a745;
         }
@@ -56,43 +42,59 @@
             background-color: #dc3545;
         }
 
+        .btn-omset {
+            background-color: #007bff;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
             background: white;
-        }
-
-        table thead {
-            background: #f1f1f1;
+            margin-top: 10px;
         }
 
         table th,
         table td {
             padding: 10px;
             border: 1px solid #ddd;
-            text-align: left;
-            vertical-align: middle;
         }
 
-        table th {
-            font-weight: bold;
+        table thead {
+            background: #f1f1f1;
         }
 
-        table img {
-            width: 48px;
-            height: 48px;
-            object-fit: cover;
-            border-radius: 4px;
+        /* PANEL OMSET */
+        #panelOmset {
+            display: none;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border: 1px solid #dcdcdc;
+        }
+
+        .close-btn {
+            background: #dc3545;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 
 <body>
 
-    <h2>DATA PRODUK</h2>
-
-    <a href="#" class="btn btn-add">+ Tambah Data</a>
     <div class="container">
+        <h2>DATA PRODUK</h2>
+
+        <!-- TOMBOL DALAM CONTAINER -->
+        <a href="tambah_produk" class="btn btn-add">+ Tambah Data</a>
+        <button class="btn btn-omset" onclick="showOmset()">📊 Ringkasan Omset</button>
+
+        <!-- TABEL PRODUK -->
         <table id="myTable">
             <thead>
                 <tr>
@@ -100,41 +102,93 @@
                     <th>nama_produk</th>
                     <th>harga_produk</th>
                     <th>stok_produk</th>
-                    <td>action</td>
+                    <th>action</th>
                 </tr>
             </thead>
+
             <tbody>
                 <tr>
                     <td>1</td>
                     <td>rice bowl chicken katsu</td>
-                    <td>20</td>
+                    <td>20000</td>
                     <td>12</td>
                     <td>
                         <a href="#" class="btn btn-edit">Edit</a>
                         <a href="#" class="btn btn-delete">Delete</a>
                     </td>
-
-                    
+                </tr>
             </tbody>
         </table>
+
+        <!-- PANEL OMSET DALAM CONTAINER -->
+        <div id="panelOmset">
+            <button class="close-btn" onclick="hideOmset()">Tutup</button>
+            <h3>RINGKASAN OMSET</h3>
+
+            <p><strong>Omset Hari Ini:</strong> Rp <span id="omset-hari">0</span></p>
+            <p><strong>Omset Minggu Ini:</strong> Rp <span id="omset-minggu">0</span></p>
+            <p><strong>Omset Bulan Ini:</strong> Rp <span id="omset-bulan">0</span></p>
+            <p><strong>Omset Tahun Ini:</strong> Rp <span id="omset-tahun">0</span></p>
+        </div>
+
     </div>
+
     <script>
-        // Contoh script untuk tombol Delete — akan hapus baris saat diklik
+        // DELETE PRODUK
         document.querySelectorAll('.btn-delete').forEach(btn => {
             btn.addEventListener('click', function (e) {
                 e.preventDefault();
                 const row = this.closest('tr');
                 row.remove();
-                // Optionally: update nomor urut (No.) setelah delete
-                updateNumbering();
             });
         });
 
-        function updateNumbering() {
-            const rows = document.querySelectorAll('#myTable tbody tr');
-            rows.forEach((r, i) => {
-                r.cells[0].innerText = i + 1;
+        // DATA TRANSAKSI CONTOH
+        const dataTransaksi = [
+            { tanggal: "2025-01-01", total: 30000 },
+            { tanggal: "2025-01-02", total: 50000 },
+            { tanggal: "2025-01-02", total: 20000 },
+            { tanggal: "2025-01-08", total: 100000 },
+            { tanggal: "2025-02-01", total: 80000 }
+        ];
+
+        // HITUNG OMSET
+        function hitungOmset() {
+            let hariIni = new Date();
+            let totalHari = 0, totalMinggu = 0, totalBulan = 0, totalTahun = 0;
+
+            dataTransaksi.forEach(t => {
+                let tgl = new Date(t.tanggal);
+
+                if (tgl.toDateString() === hariIni.toDateString()) totalHari += t.total;
+
+                let awalMinggu = new Date(hariIni);
+                awalMinggu.setDate(hariIni.getDate() - hariIni.getDay());
+
+                let akhirMinggu = new Date(awalMinggu);
+                akhirMinggu.setDate(awalMinggu.getDate() + 7);
+
+                if (tgl >= awalMinggu && tgl < akhirMinggu) totalMinggu += t.total;
+
+                if (tgl.getMonth() === hariIni.getMonth() && tgl.getFullYear() === hariIni.getFullYear())
+                    totalBulan += t.total;
+
+                if (tgl.getFullYear() === hariIni.getFullYear()) totalTahun += t.total;
             });
+
+            document.getElementById("omset-hari").innerText = totalHari.toLocaleString();
+            document.getElementById("omset-minggu").innerText = totalMinggu.toLocaleString();
+            document.getElementById("omset-bulan").innerText = totalBulan.toLocaleString();
+            document.getElementById("omset-tahun").innerText = totalTahun.toLocaleString();
+        }
+
+        function showOmset() {
+            document.getElementById("panelOmset").style.display = "block";
+            hitungOmset();
+        }
+
+        function hideOmset() {
+            document.getElementById("panelOmset").style.display = "none";
         }
     </script>
 

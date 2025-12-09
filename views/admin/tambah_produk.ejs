@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulir Input Produk</title>
     <style>
-        
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
@@ -22,10 +21,10 @@
             padding: 40px 60px;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            max-width: 700px;
+            max-width: 900px;
             width: 100%;
             box-sizing: border-box;
-            border: 5px solid #E91E63; 
+            border: 5px solid #76b0c6;
         }
 
         .registration-form h2 {
@@ -37,15 +36,14 @@
 
         .form-row {
             display: flex;
-            flex-wrap: wrap; 
+            flex-wrap: wrap;
             gap: 30px;
             margin-bottom: 20px;
         }
 
         .form-group {
             flex: 1;
-            min-width: 250px; 
-            position: relative;
+            min-width: 250px;
         }
 
         .form-group label {
@@ -57,14 +55,13 @@
         }
 
         input[type="text"],
-        input[type="number"] { 
+        input[type="number"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
             font-size: 16px;
-            height: 40px;
         }
 
         .submit-btn {
@@ -77,7 +74,7 @@
             font-size: 16px;
             font-weight: 500;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            margin-top: 10px;
+            margin-top: 30px;
         }
 
         .submit-btn:hover {
@@ -86,8 +83,9 @@
     </style>
 </head>
 <body>
+
     <div class="container">
-        <form action="#" method="POST" class="registration-form">
+        <form action="/tambah_produk" method="POST" class="registration-form">
             <h2>Input Data Produk</h2>
 
             <div class="form-row">
@@ -95,17 +93,19 @@
                     <label for="id_produk">ID Produk</label>
                     <input type="text" id="id_produk" name="id_produk" required>
                 </div>
+
                 <div class="form-group">
                     <label for="nama_produk">Nama Produk</label>
                     <input type="text" id="nama_produk" name="nama_produk" required>
                 </div>
             </div>
-            
+
             <div class="form-row">
                 <div class="form-group">
                     <label for="harga_produk">Harga Produk</label>
-                    <input type="text" id="harga_produk" name="harga_produk" required>
+                    <input type="number" id="harga_produk" name="harga_produk" required>
                 </div>
+
                 <div class="form-group">
                     <label for="stok_produk">Stok Produk</label>
                     <input type="number" id="stok_produk" name="stok_produk" min="0" required>
@@ -113,8 +113,8 @@
             </div>
 
             <button type="submit" class="submit-btn">Simpan Data Produk</button>
-
         </form>
     </div>
+
 </body>
 </html>
