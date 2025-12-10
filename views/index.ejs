@@ -249,22 +249,24 @@
                 return;
             }
             
-            // Kirim data ke server
-            fetch('/checkout', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ items: cartItems })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    localStorage.removeItem('cart');
                     window.location.href = '/transaksi';
-                }
-            })
-            .catch(err => console.error('Error:', err));
+            
+            // Kirim data ke server
+            // fetch('/checkout', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({ items: cartItems })
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     if (data.success) {
+            //         localStorage.removeItem('cart');
+            //         window.location.href = '/transaksi';
+            //     }
+            // })
+            // .catch(err => console.error('Error:', err));
         }
 
         // Notifikasi Toast

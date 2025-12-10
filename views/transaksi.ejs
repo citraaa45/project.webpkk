@@ -204,12 +204,8 @@
 
             <!-- JUMLAH SUDAH TERKUNCI -->
             
-                <input id="qty" type="number" value="1" min="1" readonly>
+                <input id="qty" type="number" readonly>
                 
-
-            <div class="total-box">
-                Total Pembelian: <span id="totalView">Rp 12.000</span>
-            </div>
 
             <h3>Metode Pembayaran</h3>
 
@@ -286,7 +282,11 @@
 
 <script>
     const PRODUCT_PRICE = 12000;
+    
+        const dataDariStorage = JSON.parse(localStorage.getItem("cart"));
+        document.getElementById("qty").value = dataDariStorage[0].quantity;
 
+        console.log(dataDariStorage)
     function rupiah(x) {
         return "Rp " + Number(x).toLocaleString("id-ID");
     }
@@ -325,7 +325,8 @@
     }
 
     function moveToTransaction() {
-        let qty = 1;
+        const dataDariStorage = JSON.parse(localStorage.getItem("cart"));
+        let qty = dataDariStorage[0].quantity;
         let method = document.getElementById("method").value;
         let total = qty * PRODUCT_PRICE;
         let productName = document.getElementById("productName").value;
@@ -335,10 +336,13 @@
             return;
         }
 
+        // console.log(dataDariStorage)
+
         document.getElementById("transaksiProduk").value = productName;
         document.getElementById("transaksiHarga").value = rupiah(PRODUCT_PRICE);
-        document.getElementById("transaksiJumlah").value = qty;
-        document.getElementById("totalHarga").value = rupiah(total);
+        document.getElementById("transaksiJumlah").value = dataDariStorage[0].quantity;
+        
+        document.getElementById("totalHarga").value = rupiah(dataDariStorage[0].quantity * PRODUCT_PRICE);
         document.getElementById("transaksiMetode").value = method;
         document.getElementById("paymentTotalFinal").innerText = rupiah(total);
 
@@ -355,7 +359,8 @@
     }
 
     async function submitOrder() {
-         let qty = 1;
+        const dataDariStorage = JSON.parse(localStorage.getItem("cart"));
+        let qty = dataDariStorage[0].quantity;
         let idPembeli = document.getElementById("idPembeli").value;
         let produk = document.getElementById("transaksiProduk").value;
         let idTransaksiproduk = document.getElementById("transaksiProduk").value;
