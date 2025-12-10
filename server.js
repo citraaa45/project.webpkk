@@ -320,9 +320,47 @@ app.post('/register_submit', async (req, res) => {
     }
 });
 
+
+
 // 🛒 Route Checkout
-app.post('/checkout', (req, res) => {
-    res.json({ success: true });
+app.post('/checkout', async (req, res) => {
+
+     try {
+        // const { nama, email, password, confirmPassword } = req.body;
+        const data = req.body;
+
+
+
+        // // Validasi input
+        // if (!nama || !email || !password || !confirmPassword) {
+        //     return res.render('register', {
+        //         title: 'Daftar - Rice Katsu',
+        //         message: 'Semua field harus diisi!'
+        //     });
+        // }
+
+        // if (password !== confirmPassword) {
+        //     return res.render('register', {
+        //         title: 'Daftar - Rice Katsu',
+        //         message: 'Password tidak cocok!'
+        //     });
+        // }
+
+        
+
+        // Insert user baru
+        const insertQuery = "INSERT INTO transaksi (id_pembeli, harga_produk, jumlah_produk, total, status_produk, nama_produk ) VALUES (?, ?, ?, ?, ?, ?)";
+        await db.query(insertQuery, [data.idPembeli, data.harga, data.jumlah, data.total, 'pending', data.produk]);
+
+        res.json({ success: true, message: 'Checkout berhasil!' });
+    } catch (error) {
+        console.error('Error register:', error);
+        res.render('register', {
+            title: 'Daftar - Rice Katsu',
+            message: 'Terjadi kesalahan server!'
+        });
+    }
+    // res.json({ success: true });
 });
 
 // 📋 Route Transaksi (Halaman Konfirmasi Pesanan)

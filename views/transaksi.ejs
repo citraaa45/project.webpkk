@@ -354,12 +354,44 @@
         document.getElementById("transaction-section").style.display = "none";
     }
 
-    function submitOrder() {
+    async function submitOrder() {
+         let qty = 1;
+        let idPembeli = document.getElementById("idPembeli").value;
         let produk = document.getElementById("transaksiProduk").value;
+        let idTransaksiproduk = document.getElementById("transaksiProduk").value;
+        let idTransaksiHarga = document.getElementById("transaksiHarga").value;
+        let idTransaksiJumlah = document.getElementById("transaksiJumlah").value;
         let total = document.getElementById("totalHarga").value;
+        let idTransaksiMetode = document.getElementById("transaksiMetode").value;
+        
 
         alert(`✅ Pesanan "${produk}" dengan total ${total} berhasil dibuat! Admin akan segera memprosesnya.`);
+        const data = {
+            idPembeli: idPembeli,
+            produk: produk,
+            harga: PRODUCT_PRICE,
+            jumlah: qty,
+            total: qty * PRODUCT_PRICE,
+            metode: idTransaksiMetode
+        }
+
+        try {
+            const response = await fetch("http://localhost:3000/checkout", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
         
+        console.log(result);
+        } catch (error) {
+            console.log("Error:", error);
+        }
+
+     
         backToHome();
     }
 
