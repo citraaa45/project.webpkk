@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <div class="allwrap">
+        <div class="parent">
+            <div style="width: 100%;">
+                <div class="navbar">
+                    <div>
+                        <img class="logo" src="logo.png" alt="">
+                    </div>
+
+                    <div class="navbar-right">
+
+                            <% if (isLoggedIn && user) { %>
+                                <span style="font-weight: bold; color: #c72825; margin-right: 15px;">
+                                    Halo, <%= user.nama %>
+                                </span>
+                            <% } %>
+
+                            <!-- Login/Logout -->
+                            <% if (isLoggedIn) { %>
+                                <a href="/logout" class="icon">
+                                    <img src="/logout.png" alt="Logout">
+                                </a>
+                            <% } 
+                            else { %>
+                                <a href="/login" class="icon">
+                                    <img src="/login.png" alt="Login">
+                                </a>
+                            <% } %>
+                            <!-- Side Cart Toggle -->
+                            <a href="javascript:void(0)" onclick="toggleCart()" class="icon"
+                                title="Side Cart">
+                                <div id="cart-badge"></div>
+                                <img src="/keranjang.png" alt="Keranjang">
+                            </a>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- SIDE CART PANEL -->
+            <div id="side-cart" class="side-cart">
+                <div class="side-cart-header">
+                    <h2>🛒 Keranjang</h2>
+                    <button class="close-cart" onclick="toggleCart()">✖</button>
+                </div>
+                <div id="cart-items">
+                    <p style="text-align: center; color: #999;">Keranjang kosong</p>
+                </div>
+                <button onclick="checkoutToTransaksi()" class="checkout">CHECKOUT</button>
+            </div>
+
+            <!-- NOTIFICATION TOAST -->
+            <div id="notification-toast" class="notification-toast"></div>
+
+            <!-- HERO SECTION -->
+            <header class="top">
+                <img src="/top.png" alt="Hero Image" style="width:100%;height: 350px;margin-top: -25px;">
+                <div class="wraptext">
+                    <a class="top-button">Beli Sekarang</a>
+                </div>
+            </header>
+
+            <!-- INTRO SECTION -->
+            <div style="margin-top: 200px;" class="contenttext">
+                <h1>"Dengan semangkuk nasi hangat dan ayam katsu yang crispy di luar dan juicy di dalam"</h1>
+            </div>
+
+            <!-- PRODUCT LIST -->
+            <section class="wrapcontent" id="product-list">
+                <% if (products && products.length> 0) { %>
+                    <% products.forEach(product=> { %>
+                        <div class="product-card">
+                            <img src="/<%= product.imagePath %>" alt="<%= product.name %>"
+                                onerror="this.src='/default.png'">
+                            <h3 class="name">
+                                <%= product.name %>
+                            </h3>
+                            <p class="price">Rp <%= product.price.toLocaleString('id-ID') %>
+                            </p>
+                            <button class="btn-keranjang"
+                                onclick="addToCart('<%= product.id %>', '<%= product.name %>', <%= product.price %>)">
+                                + Keranjang
+                            </button>
+                        </div>
+                        <% }); %>
+                            <% } else { %>
+                                <p style="text-align: center; color: #999;">Data produk sedang dimuat...</p>
+                                <% } %>
+            </section>
+
+            <!-- CONTENT SECTION 2 -->
+            <section class="contenttext">
+                <h2>BAHAN PREMIUM & HARGA TERJANGKAU</h2>
+            </section>
+
+            <div class="content2">
+                <div class="wraptext2">
+                    <h1>PASTINYA AKAN MEMBUAT PERUTMU KENYANG KARNA PORSI YANG MEMUASKAN DAN HARGA TERJANGKAU</h1>
+                </div>
+                <div style="padding-block: 30px;">
+                    <img class="image image2" src="chicken.jpg" alt="">
+                </div>
+            </div>
+
+            <!-- LOCATION & MAP -->
+            <section class="content3">
+                <img style="width: 100%; object-fit: cover;" src="/lastimg.png" alt="Dekorasi">
+                <div class="container1">
+                    <div id="Alamat" class="addres">Alamat kami:</div>
+                    <div class="map-container">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3965.0542301721275!2d107.4569362749917!3d-6.387003393603428!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zNsKwMjMnMTMuMiJTIDEwN8KwMjcnMzQuMiJF!5e0!3m2!1sid!2sid!4v1748781182241!5m2!1sid!2sid"
+                            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+            <footer class="footer">
+                <h3>Contact & Social Media</h3>
+                <div class="icons">
+                    <a href="https://www.instagram.com/" target="_blank" class="icon">
+                        <img src="/ikon ig.png" alt="Instagram">
+                    </a>
+                    <a href="https://wa.me/6289650022527" target="_blank" class="icon">
+                        <img src="/wa.png" alt="WhatsApp">
+                    </a>
+                    <a href="mailto:ricekatsu26@gmail.com" target="_blank" class="icon">
+                        <img src="/email.png" alt="Email">
+                    </a>
+                    <a href="https://www.tiktok.com/" target="_blank" class="icon">
+                        <img src="/tiktok.png" alt="TikTok">
+                    </a>
+                    <a href="https://shopee.co.id/" target="_blank" class="icon">
+                        <img src="/keranjang.png" alt="Navbar">
+                    </a>
+                    </a>
+                    <a href="https://www.youtube.com/" target="_blank" class="icon">
+                        <img src="/yt.png" alt="YouTube">
+                    </a>
+                </div>
+                <p>&copy; 2025 Rice Katsu - Semua Hak Dilindungi</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- CLIENT-SIDE JAVASCRIPT -->
+    <script>
+          // Toggle Side Cart
+        function toggleCart() {
+            const cart = document.getElementById('side-cart');
+            cart.classList.toggle('open');
+        }
+
+        // Tambah ke Keranjang
+        function addToCart(id, name, price) {
+            let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            // Cek apakah produk sudah ada
+            const existingItem = cartItems.find(item => item.id === id);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cartItems.push({ id, name, price, quantity: 1 });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+            updateCartDisplay();
+            showNotification(name + ' ditambahkan ke keranjang!');
+        }
+
+        // Update tampilan keranjang
+        function updateCartDisplay() {
+            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartContainer = document.getElementById('cart-items');
+            const badge = document.getElementById('cart-badge');
+            // console.log(badge)
+            // badge.textContent = cartItems.length;
+            badge.style.display = cartItems.length > 0 ? 'block' : 'none';
+            
+            cartContainer.innerHTML = '';
+            
+            if (cartItems.length === 0) {
+                cartContainer.innerHTML = '<p style="text-align: center; color: #999;">Keranjang kosong</p>';
+                return;
+            }
+            
+            cartItems.forEach(item => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'cart-item';
+                itemEl.innerHTML = `
+                    <strong>${item.name}</strong>
+                    <p>Rp ${item.price.toLocaleString('id-ID')} x ${item.quantity}</p>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn btn-minus" onclick="changeQuantity('${item.id}', -1)">-</button>
+                        <span class="quantity-display">${item.quantity}</span>
+                        <button class="quantity-btn btn-plus" onclick="changeQuantity('${item.id}', 1)">+</button>
+                        <button class="btn-delete" onclick="removeFromCart('${item.id}')">🗑</button>
+                    </div>
+                `;
+                cartContainer.appendChild(itemEl);
+            });
+        }
+
+        // Ubah jumlah item
+        function changeQuantity(id, change) {
+            let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            const item = cartItems.find(item => item.id === id);
+            
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    cartItems = cartItems.filter(item => item.id !== id);
+                }
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+            updateCartDisplay();
+        }
+
+        // Hapus dari keranjang
+        function removeFromCart(id) {
+            let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            cartItems = cartItems.filter(item => item.id !== id);
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+            updateCartDisplay();
+            showNotification('Produk dihapus dari keranjang');
+        }
+
+        // Checkout
+        function checkoutToTransaksi() {
+            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            if (cartItems.length === 0) {
+                showNotification('Keranjang Anda kosong!');
+                return;
+            }
+            
+            // Kirim data ke server
+            fetch('/checkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ items: cartItems })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.removeItem('cart');
+                    window.location.href = '/transaksi';
+                }
+            })
+            .catch(err => console.error('Error:', err));
+        }
+
+        // Notifikasi Toast
+        function showNotification(message) {
+            const toast = document.getElementById('notification-toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Jalankan saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartDisplay();
+        });
+    
+    </script>
+</body>
+
+</html>
