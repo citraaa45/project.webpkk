@@ -84,15 +84,14 @@
                 <% if (products && products.length> 0) { %>
                     <% products.forEach(product=> { %>
                         <div class="product-card">
-                            <img src="/<%= product.imagePath %>" alt="<%= product.name %>"
-                                onerror="this.src='/default.png'">
+                            <img src="katsu.png" alt="<%= product.name %>" />
                             <h3 class="name">
-                                <%= product.name %>
+                                <%= product.nama_produk %>
                             </h3>
-                            <p class="price">Rp <%= product.price.toLocaleString('id-ID') %>
+                            <p class="price">Rp <%= product.harga_produk.toLocaleString('id-ID') %>
                             </p>
                             <button class="btn-keranjang"
-                                onclick="addToCart('<%= product.id %>', '<%= product.name %>', <%= product.price %>)">
+                                onclick="addToCart('<%= product.id_produk %>', '<%= product.nama_produk %>', <%= product.harga_produk %>)">
                                 + Keranjang
                             </button>
                         </div>

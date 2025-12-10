@@ -159,8 +159,10 @@ const getClientJs = () => {
 app.get('/', async (req, res) => {
     try {
         // Ambil data produk dari database
-        const query = 'SELECT * FROM produk LIMIT 10';
+        const query = 'SELECT * FROM products LIMIT 10';
         const [products] = await db.query(query);
+
+        // return res.json(products);
 
         // Jika database kosong atau error, gunakan data dummy
         const productList = products && products.length > 0 ? products : [
@@ -385,6 +387,20 @@ app.get('/logout', (req, res) => {
     });
 });
 
+app.get('/admin', async (req, res) => {
+
+    // Pastikan hanya admin yang bisa mengakses
+  const query = 'SELECT * FROM  LIMIT 10';
+        const [products] = await db.query(query);
+
+
+    res.render('admin', {
+        title: 'Admin Dashboard - Rice Katsu',
+        // isLoggedIn: req.session.user ? true : false,
+        // user: req.session.user || null,
+        // clientJs: getClientJs()
+    });
+});
 // ======================================
 // 4. ERROR HANDLING
 // ======================================
