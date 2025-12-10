@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        <%= title %>
+        Rice Katsu - Home
     </title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="/style.css">
 </head>
 
@@ -22,29 +23,30 @@
 
                     <div class="navbar-right">
 
-                            <% if (isLoggedIn && user) { %>
-                                <span style="font-weight: bold; color: #c72825; margin-right: 15px;">
-                                    Halo, <%= user.nama %>
-                                </span>
-                            <% } %>
+                        <% if (isLoggedIn && user) { %>
+                            <span style="font-weight: bold; color: #c72825; margin-right: 15px;">
+                                Halo, <%= user.email.split('@')[0] %>
+                            </span>
+                        <% } %>
 
-                            <!-- Login/Logout -->
-                            <% if (isLoggedIn) { %>
-                                <a href="/logout" class="icon">
-                                    <img src="/logout.png" alt="Logout">
-                                </a>
-                            <% } 
-                            else { %>
-                                <a href="/login" class="icon">
-                                    <img src="/login.png" alt="Login">
-                                </a>
-                            <% } %>
-                            <!-- Side Cart Toggle -->
-                            <a href="javascript:void(0)" onclick="toggleCart()" class="icon"
-                                title="Side Cart">
-                                <div id="cart-badge"></div>
-                                <img src="/keranjang.png" alt="Keranjang">
+                                <!-- Login/Logout -->
+                        <% if (isLoggedIn) { %>
+                            <a href="/logout">
+                                <div class="icon">
+                                    <i class="bi bi-box-arrow-in-left"></i>
+                                </div>
                             </a>
+                        <% } else { %>
+                            <a href="/login" class="icon">
+                                <i class="bi bi-person-circle"></i>
+                            </a>
+                        <% } %>
+                        <!-- Side Cart Toggle -->
+                        <a href="javascript:void(0)" onclick="toggleCart()" class="icon"
+                            title="Side Cart">
+                            <div id="cart-badge"></div>
+                            <i class="bi bi-cart"></i>
+                        </a>
                     </div>
 
                 </div>
@@ -86,12 +88,12 @@
                         <div class="product-card">
                             <img src="katsu.png" alt="<%= product.name %>" />
                             <h3 class="name">
-                                <%= product.nama_produk %>
+                                <%= product.name %>
                             </h3>
-                            <p class="price">Rp <%= product.harga_produk.toLocaleString('id-ID') %>
+                            <p class="price">Rp <%= product.price.toLocaleString('id-ID') %>
                             </p>
                             <button class="btn-keranjang"
-                                onclick="addToCart('<%= product.id_produk %>', '<%= product.nama_produk %>', <%= product.harga_produk %>)">
+                                onclick="addToCart('<%= product.id %>', '<%= product.name %>', <%= product.price %>)">
                                 + Keranjang
                             </button>
                         </div>
@@ -134,24 +136,24 @@
                 <h3>Contact & Social Media</h3>
                 <div class="icons">
                     <a href="https://www.instagram.com/" target="_blank" class="icon">
-                        <img src="/ikon ig.png" alt="Instagram">
+                        <i class="bi bi-instagram"></i>
                     </a>
                     <a href="https://wa.me/6289650022527" target="_blank" class="icon">
-                        <img src="/wa.png" alt="WhatsApp">
+                        <i class="bi bi-whatsapp"></i>
                     </a>
                     <a href="mailto:ricekatsu26@gmail.com" target="_blank" class="icon">
-                        <img src="/email.png" alt="Email">
+                        <i class="bi bi-envelope"></i>
                     </a>
                     <a href="https://www.tiktok.com/" target="_blank" class="icon">
-                        <img src="/tiktok.png" alt="TikTok">
+                        <i class="bi bi-tiktok"></i>
                     </a>
                     <a href="https://shopee.co.id/" target="_blank" class="icon">
-                        <img src="/keranjang.png" alt="Navbar">
+                        <i class="bi bi-cart"></i>
                     </a>
-                    </a>
-                    <a href="https://www.youtube.com/" target="_blank" class="icon">
-                        <img src="/yt.png" alt="YouTube">
-                    </a>
+                </a>
+                <a href="https://www.youtube.com/" target="_blank" class="icon">
+                    <i class="bi bi-youtube"></i>
+                </a>
                 </div>
                 <p>&copy; 2025 Rice Katsu - Semua Hak Dilindungi</p>
             </footer>
@@ -160,7 +162,7 @@
 
     <!-- CLIENT-SIDE JAVASCRIPT -->
     <script>
-          // Toggle Side Cart
+        // Toggle Side Cart
         function toggleCart() {
             const cart = document.getElementById('side-cart');
             cart.classList.toggle('open');
@@ -169,7 +171,7 @@
         // Tambah ke Keranjang
         function addToCart(id, name, price) {
             let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-            
+
             // Cek apakah produk sudah ada
             const existingItem = cartItems.find(item => item.id === id);
             if (existingItem) {
@@ -177,7 +179,7 @@
             } else {
                 cartItems.push({ id, name, price, quantity: 1 });
             }
-            
+
             localStorage.setItem('cart', JSON.stringify(cartItems));
             updateCartDisplay();
             showNotification(name + ' ditambahkan ke keranjang!');
@@ -191,14 +193,14 @@
             // console.log(badge)
             // badge.textContent = cartItems.length;
             badge.style.display = cartItems.length > 0 ? 'block' : 'none';
-            
+
             cartContainer.innerHTML = '';
-            
+
             if (cartItems.length === 0) {
                 cartContainer.innerHTML = '<p style="text-align: center; color: #999;">Keranjang kosong</p>';
                 return;
             }
-            
+
             cartItems.forEach(item => {
                 const itemEl = document.createElement('div');
                 itemEl.className = 'cart-item';
@@ -220,14 +222,14 @@
         function changeQuantity(id, change) {
             let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
             const item = cartItems.find(item => item.id === id);
-            
+
             if (item) {
                 item.quantity += change;
                 if (item.quantity <= 0) {
                     cartItems = cartItems.filter(item => item.id !== id);
                 }
             }
-            
+
             localStorage.setItem('cart', JSON.stringify(cartItems));
             updateCartDisplay();
         }
@@ -248,25 +250,25 @@
                 showNotification('Keranjang Anda kosong!');
                 return;
             }
-            
-                    window.location.href = '/transaksi';
-            
+
+            // window.location.href = '/transaksi';
+
             // Kirim data ke server
-            // fetch('/checkout', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify({ items: cartItems })
-            // })
-            // .then(response => response.json())
-            // .then(data => {
-            //     if (data.success) {
-            //         localStorage.removeItem('cart');
-            //         window.location.href = '/transaksi';
-            //     }
-            // })
-            // .catch(err => console.error('Error:', err));
+            fetch('/checkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ items: cartItems })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.removeItem('cart');
+                    window.location.href = '/transaksi';
+                }
+            })
+            .catch(err => console.error('Error:', err));
         }
 
         // Notifikasi Toast
@@ -281,7 +283,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             updateCartDisplay();
         });
-    
+
     </script>
 </body>
 

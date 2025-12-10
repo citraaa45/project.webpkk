@@ -176,9 +176,116 @@
     
     <div id="notification-toast" class="notification-toast"></div>
 
-    <!-- ✅ PERBAIKAN: Syntax yang benar -->
     <script>
-        <%- clientJs %>
+        function toggleCart() {
+            const cart = document.getElementById('side-cart');
+            cart.classList.toggle('open');
+        }
+
+        function addToCart(id, name, price) {
+            let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            const existingItem = cartItems.find(item => item.id === id);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cartItems.push({ id, name, price, quantity: 1 });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+            updateCartDisplay();
+            showNotification(name + ' ditambahkan ke keranjang!');
+        }
+
+        function updateCartDisplay() {
+            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartContainer = document.getElementById('cart-items');
+            const badge = document.getElementById('cart-badge');
+            
+            badge.textContent = cartItems.length;
+            badge.style.display = cartItems.length > 0 ? 'block' : 'none';
+            
+            cartContainer.innerHTML = '';
+            
+            if (cartItems.length === 0) {
+                cartContainer.innerHTML = '<p style="text-align: center; color: #999;">Keranjang kosong</p>';
+                return;
+            }
+            
+            cartItems.forEach(item => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'cart-item';
+                itemEl.innerHTML = `
+                    <strong>\${item.name}</strong>
+                    <p>Rp \${item.price.toLocaleString('id-ID')} x \${item.quantity}</p>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn btn-minus" onclick="changeQuantity('\${item.id}', -1)">-</button>
+                        <span class="quantity-display">\${item.quantity}</span>
+                        <button class="quantity-btn btn-plus" onclick="changeQuantity('\${item.id}', 1)">+</button>
+                        <button class="btn-delete" onclick="removeFromCart('${item.id}')">🗑</button>
+                    </div>
+                `;
+                cartContainer.appendChild(itemEl);
+            });
+        }
+
+        function changeQuantity(id, change) {
+            let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            const item = cartItems.find(item => item.id === id);
+            
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    cartItems = cartItems.filter(item => item.id !== id);
+                }
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+            updateCartDisplay();
+        }
+
+        function removeFromCart(id) {
+            let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            cartItems = cartItems.filter(item => item.id !== id);
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+            updateCartDisplay();
+            showNotification('Produk dihapus dari keranjang');
+        }
+
+        function checkoutToTransaksi() {
+            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            if (cartItems.length === 0) {
+                showNotification('Keranjang Anda kosong!');
+                return;
+            }
+            
+            fetch('/checkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ items: cartItems })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.removeItem('cart');
+                    window.location.href = '/transaksi';
+                }
+            })
+            .catch(err => console.error('Error:', err));
+        }
+
+        function showNotification(message) {
+            const toast = document.getElementById('notification-toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartDisplay();
+        });
     </script>
 </body>
 

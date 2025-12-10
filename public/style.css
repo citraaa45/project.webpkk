@@ -17,8 +17,8 @@ html {
 }
 
 .parent {
-    width: 100%;
-    min-height: 100vh;
+    /* width: 100%;
+    min-height: 100vh; */
 }
 
 /* ========== NAVBAR ========== */
@@ -35,7 +35,7 @@ html {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 30px;
+    padding: 0 40px;
     box-sizing: border-box;
 
     overflow: hidden;
@@ -45,7 +45,7 @@ html {
     left: 0;
     width: 100%;
     background-color: #f0bc73;
-    height: 150px;
+    height: 100px;
     display: flex;
     justify-content: space-between;
     text-align: center;
@@ -69,8 +69,8 @@ html {
 }
 
 .logo {
-    height: 170px;
-    width: 170px;
+    height: 120px;
+    width: 120px;
     object-fit: contain;
 }
 
@@ -298,7 +298,7 @@ html {
 .top {
     position: relative;
     text-align: center;
-    margin-top: 300px;
+    margin-top: 160px;
     padding: 20px;
 }
 
@@ -445,8 +445,7 @@ html {
 }
 
 .contenttext {
-    width: 100%;
-    padding: 40px 20px;
+    padding: 50px 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -457,7 +456,7 @@ html {
     margin-top: 50px;
 }
 
-.contenttext h2 {
+.contenttext h1 {
     font-size: 2em;
     margin: 0;
 }
@@ -510,7 +509,7 @@ html {
 .content3 {
     background-color: rgb(255, 236, 153);
     width: 100%;
-    padding: 40px 20px;
+    /* padding: 40px 20px; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -543,12 +542,12 @@ html {
 
 /* ========== MAPS & ADDRESS ========== */
 .container1 {
-    padding: 50px 20px;
+    padding: 50px 0px;
     width: 100%;
 }
 
 .addres {
-    margin-bottom: 10px;
+    text-align: center;
     font-family: 'Poppins', sans-serif;
     font-size: 24px;
     color: #333;
@@ -574,8 +573,8 @@ iframe {
 .footer {
     width: 100%;
     background-color: #f0bc73;
-    height: 100px;
-    padding: 30px 20px;
+    /* height: 100px; */
+    padding: 30px 0px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -600,8 +599,8 @@ iframe {
 
 .icon {
     text-decoration: none;
-    font-size: 10px;
-    color: white;
+    font-size: 28px;
+    color: #333;
     width: 30px;
     height: 30px;
     display: flex;

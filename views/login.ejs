@@ -2,11 +2,10 @@
 <html>
 
 <head>
-    <title><%= title %></title>
+    <title>Masuk Rice Katsu</title>
     <link rel="stylesheet" href="/style.css"> 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* [CSS Styling dipertahankan dari versi sebelumnya] */
         body {
             font-family: 'Poppins', Arial, sans-serif;
             background: linear-gradient(135deg, #fff6d1, #ffd87a, #f4c55c);
@@ -46,20 +45,6 @@
         }
         .btn:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 6px 15px rgba(255, 184, 58, 0.7); }
 
-        .role-btn-container { display: flex; justify-content: space-between; margin-bottom: 25px; }
-        .role-btn {
-            width: 48%; padding: 10px; border-radius: 12px; border: 2px solid transparent;
-            background: linear-gradient(135deg, #f6e8ac, #d0c395); cursor: pointer;
-            font-weight: bold; color: #666; transition: 0.3s; box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-        }
-        .role-btn:hover:not(.active) { background: linear-gradient(135deg, #f7ebb8, #dfd1a4); }
-        .role-btn.active {
-            background: linear-gradient(135deg, #ffbb38, #ffcc5c); 
-            border: 2px solid #c72825; 
-            color: #c72825;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(255, 187, 56, 0.7);
-        }
         .login-info { color: rgb(220, 53, 69); text-align: center; margin-top: 15px; font-weight: 500; }
         .register-link { text-align: center; margin-top: 15px; font-size: 14px; }
         .register-link a { color: #4CAF50; text-decoration: none; font-weight: bold; }
@@ -70,57 +55,26 @@
 <body>
 
 <form id="loginCard" class="card" action="/login_submit" method="POST">
-    <h2>USER LOGIN</h2>
+    <h2>Masuk</h2>
 
-    <input type="hidden" id="roleInput" name="role" required> 
+    <p id="loginInfo" class="login-info">
+        <% if (typeof message!== 'undefined' && message) { %>
+            <%= message%>
+        <% } %>
+    </p>
 
-    <div class="role-btn-container">
-        <button type="button" class="role-btn" id="adminBtn" onclick="setRole('admin')">ADMIN</button>
-        <button type="button" class="role-btn" id="pembeliBtn" onclick="setRole('pembeli')">PEMBELI</button>
-    </div>
-
-    <label for="loginNama">NAMA</label>
-    <input type="text" id="loginNama" name="nama" required>
+    <label for="loginEmail">EMAIL</label>
+    <input type="text" id="loginEmail" name="email" required>
 
     <label for="loginPass">PASSWORD</label>
-    <input type="password" id="loginPass" name="pass" required>
+    <input type="password" id="loginPass" name="password" required>
 
     <button class="btn" type="submit">LOGIN</button>
 
-    <p id="loginInfo" class="login-info">
-        <% if (typeof error !== 'undefined' && error) { %>
-            <%= error %>
-        <% } %>
-    </p>
-    
     <div class="register-link">
         Belum punya akun? <a href="/register">Daftar di sini</a>
     </div>
 </form>
-
-<script>
-    const roleInput = document.getElementById("roleInput");
-    const adminBtn = document.getElementById("adminBtn");
-    const pembeliBtn = document.getElementById("pembeliBtn");
-
-    function setRole(role) {
-        roleInput.value = role;
-
-        adminBtn.classList.remove('active');
-        pembeliBtn.classList.remove('active');
-        
-        if (role === 'admin') {
-            adminBtn.classList.add('active');
-        } else if (role === 'pembeli') {
-            pembeliBtn.classList.add('active');
-        }
-    }
-
-    if (!roleInput.value) { 
-        setRole('pembeli'); 
-    }
-</script>
-
 </body>
 
 </html>
