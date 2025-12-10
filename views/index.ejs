@@ -251,9 +251,6 @@
                 return;
             }
 
-            // window.location.href = '/transaksi';
-
-            // Kirim data ke server
             fetch('/checkout', {
                 method: 'POST',
                 headers: {
@@ -264,11 +261,19 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    showNotification(data.message || 'Checkout berhasil!');
                     localStorage.removeItem('cart');
-                    window.location.href = '/transaksi';
+                    setTimeout(() => {
+                        window.location.href = '/transaksi/' + data.orderId;
+                    }, 1200);
+                } else {
+                    showNotification(data.message || 'Checkout gagal!');
                 }
             })
-            .catch(err => console.error('Error:', err));
+            .catch(err => {
+                showNotification('Terjadi kesalahan saat checkout!');
+                console.error('Error:', err);
+            });
         }
 
         // Notifikasi Toast

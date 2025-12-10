@@ -81,7 +81,7 @@ app.post("/login_submit", async (req, res) => {
     }
 
     req.session.user = {
-      id: user.id_user,
+      id: user.id,
       email: user.email,
       name: user.name,
       role: user.role,
@@ -158,44 +158,49 @@ app.post("/register_submit", async (req, res) => {
 // 🛒 Route Checkout
 app.post("/checkout", async (req, res) => {
   try {
-    // const { nama, email, password, confirmPassword } = req.body;
-    const data = req.body;
+    const { items } = req.body;
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ success: false, message: "Tidak ada produk yang dipesan." });
+    }
 
-    // // Validasi input
-    // if (!nama || !email || !password || !confirmPassword) {
-    //     return res.render('register', {
-    //         title: 'Daftar - Rice Katsu',
-    //         message: 'Semua field harus diisi!'
-    //     });
-    // }
+    if(!req.session.user){
+      return res.status(401).json({ success: false, message: "Silahkan login terlebih dahulu untuk melakukan checkout." });
+    }
 
-    // if (password !== confirmPassword) {
-    //     return res.render('register', {
-    //         title: 'Daftar - Rice Katsu',
-    //         message: 'Password tidak cocok!'
-    //     });
-    // }
+    // Ambil id pembeli dari session jika login
+    const idPembeli = req.session.user ? req.session.user.id : null;
+    const orderTotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const orderStatus = "pending";
+    const orderDate = new Date();
 
-    // Insert user baru
-    const insertQuery =
-      "INSERT INTO transaksi (id_pembeli, harga_produk, jumlah_produk, total, status_produk, nama_produk ) VALUES (?, ?, ?, ?, ?, ?)";
-    await db.query(insertQuery, [
-      data.idPembeli,
-      data.harga,
-      data.jumlah,
-      data.total,
-      "pending",
-      data.produk,
-    ]);
+    // Insert ke tabel orders
+    const orderInsertQuery = "INSERT INTO orders (id_user, tanggal, total, status) VALUES (?, ?, ?, ?)";
+    const [orderResult] = await db.query(orderInsertQuery, [idPembeli, orderDate, orderTotal, orderStatus]);
+    // Ambil order_id (MySQL: insertId)
+    const orderId = orderResult.insertId;
 
-    res.json({ success: true, message: "Checkout berhasil!" });
+    let successCount = 0;
+    for (const item of items) {
+      const total = item.price * item.quantity;
+      // Insert ke tabel transaksi (order_items), relasikan dengan order_id
+      const itemInsertQuery =
+        "INSERT INTO order_items (order_id, id_user, harga_produk, jumlah_produk, total, status_produk, nama_produk ) VALUES (?, ?, ?, ?, ?, ?, ?)";
+      await db.query(itemInsertQuery, [
+        orderId,
+        idPembeli,
+        item.price,
+        item.quantity,
+        total,
+        "pending",
+        item.name,
+      ]);
+      successCount++;
+    }
+    res.json({ success: true, orderId: orderId, message: `Checkout berhasil! Order #${orderId} dibuat dengan ${successCount} produk.` });
   } catch (error) {
-    console.error("Error register:", error);
-    res.render("register", {
-      message: "Terjadi kesalahan server!",
-    });
+    console.error("Error checkout:", error);
+    res.status(500).json({ success: false, message: "Terjadi kesalahan server!" });
   }
-  // res.json({ success: true });
 });
 
 // 🚪 Route Logout
@@ -203,6 +208,33 @@ app.get("/logout", (req, res) => {
   req.session.destroy(() => {
     res.redirect("/");
   });
+});
+
+
+// Route detail transaksi
+app.get("/transaksi/:id", async (req, res) => {
+  const orderId = req.params.id;
+  try {
+    // Ambil detail order
+    const [orderRows] = await db.query("SELECT * FROM orders WHERE id= ?", [orderId]);
+    if (orderRows.length === 0) {
+      return res.status(404).send("Transaksi tidak ditemukan");
+    }
+    const order = orderRows[0];
+
+    // Ambil produk yang dipesan
+    const [items] = await db.query("SELECT * FROM order_items WHERE order_id = ?", [orderId]);
+
+    res.render("transaksi", {
+      title: `Detail Transaksi #${orderId}`,
+      order,
+      items,
+      user: req.session.user || null,
+    });
+  } catch (error) {
+    console.error("Error detail transaksi:", error);
+    res.status(500).send("Terjadi kesalahan server!");
+  }
 });
 
 app.get("/admin", async (req, res) => {

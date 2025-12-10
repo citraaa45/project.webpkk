@@ -1,409 +1,131 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <title>Checkout & Transaksi - Rice Katsu</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/style.css">
     <style>
-        /* --- General Styles --- */
         body {
-            font-family: "Poppins", Arial, sans-serif;
-            padding: 25px;
-            background: linear-gradient(270deg, #fbc531, #e17055, #ce7100);
-            background-size: 400% 400%;
-            animation: wave 10s ease infinite;
+            font-family: 'Poppins', Arial, sans-serif;
+            background: #f8f8fa;
+            margin: 0;
         }
-
-        @keyframes wave {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .transaksi-container {
+            max-width: 700px;
+            margin: 120px auto 40px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            padding: 32px 28px 24px 28px;
         }
-
-        .btn-home {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            background: #a64200;
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            z-index: 999;
-            font-weight: bold;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
-            transition: 0.2s;
+        .transaksi-header {
+            border-bottom: 1px solid #ececec;
+            margin-bottom: 24px;
+            padding-bottom: 18px;
         }
-
-        .btn-home:hover {
-            background: #8c3700;
-            transform: scale(1.05);
+        .transaksi-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #c72825;
+            margin: 0 0 8px 0;
         }
-
-        .container {
-            background: white;
-            padding: 25px;
-            border-radius: 14px;
-            width: 95%;
-            max-width: 480px;
-            margin: auto;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-            animation: fadeIn .8s ease;
+        .transaksi-header .meta {
+            font-size: 1rem;
+            color: #888;
+            margin-bottom: 4px;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            font-size: 24px;
-            color: #8d4b25;
-            letter-spacing: 1px;
-        }
-
-        h3 {
-            margin-top: 20px;
-            margin-bottom: 12px;
-            color: #b86113;
-        }
-
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 15px;
-            font-size: 15px;
-            color: #5a3e1b;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 12px;
-            margin-top: 6px;
-            font-size: 16px;
-            border-radius: 10px;
-            border: 1px solid #c69b4b;
-            background: #fff9e6;
-            box-sizing: border-box;
-        }
-        
-        input:read-only {
-            background: #f1f1f1;
-        }
-
-        #checkout-section .total-box {
-            background: #FFD461;
-            padding: 14px;
-            border-radius: 10px;
-            font-weight: bold;
-            border: 1px solid #d6a353;
-            margin-top: 20px;
-            font-size: 17px;
-            color: #5a3e1b;
-        }
-
-        
-
-        
-       
-       
-
-        .payment-detail {
-            background: #ffedbd;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid #d6a353;
-            margin-bottom: 12px;
-        }
-
-        .copy-btn {
-            padding: 6px 12px;
-            background: #b86113;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 6px;
-            transition: 0.2s;
-        }
-        
-        .copy-btn:hover {
-            background: #a64200;
-        }
-
-        .btn-lanjut {
-            margin-top: 25px;
-            padding: 14px;
-            background: #d35400;
-            color: white;
-            font-size: 17px;
-            border: none;
-            border-radius: 12px;
-            width: 100%;
-            cursor: pointer;
-            transition: 0.3s;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-lanjut:hover {
-            background: #b84300;
-            transform: scale(1.01);
-        }
-
-        #transaction-section {
-            display: none;
-        }
-
-        #transaction-section input {
-            background: #f5f5f5;
+        .transaksi-header .total {
+            font-size: 1.2rem;
             font-weight: 600;
-            color: #333;
+            color: #e17055;
         }
-
-        .transaction-info {
-            background: #ffe9a0;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            border: 1px solid #d6a353;
+        .produk-list {
+            margin-top: 18px;
         }
-
-        .transaction-info p {
-            margin: 5px 0;
+        .produk-card {
+            background: #f9f9fc;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding: 18px 20px;
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
         }
-
-        .transaction-info b {
+        .produk-card h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0 0 6px 0;
             color: #c72825;
         }
-
-        .hidden {
-            display: none;
+        .produk-card p {
+            margin: 2px 0;
+            font-size: 0.98rem;
+            color: #444;
+        }
+        .produk-card .produk-status {
+            font-size: 0.95rem;
+            color: #e17055;
+            font-weight: 500;
+            margin-top: 6px;
+        }
+        @media (max-width: 800px) {
+            .transaksi-container {
+                max-width: 98vw;
+                padding: 18px 8px 12px 8px;
+            }
         }
     </style>
 </head>
-
 <body>
+    <div class="">
+        <div class="parent">
+            <nav class="navbar">
+                <div class="navbar-left">
+                    <a href="/" class="logo-link"><img class="logo" src="/logo.png" alt="Rice Katsu Logo"></a>
+                </div>
+                <div class="navbar-right">
+                    <% if (user) { %>
+                        <span class="user-greeting">Halo, <%= user.name || user.email %></span>
+                        <a href="/logout" class="icon" title="Logout"><i class="bi bi-box-arrow-in-left"></i></a>
+                    <% } else { %>
+                        <a href="/login" class="icon" title="Login"><i class="bi bi-person-circle"></i></a>
+                    <% } %>
+                </div>
+            </nav>
 
-    <button class="btn-home" onclick="backToHome()">⬅</button>
 
-    <div class="container">
-
-        <div id="checkout-section">
-            <h2>PILIH PESANAN</h2>
-
-            <label>Nama Produk</label>
-            <input id="productName" value="Rice Bowl Chicken Katsu" readonly>
-
-            <label>Harga Satuan</label>
-            <input id="price" type="number" value="12000" readonly>
-
-            <label>Jumlah</label>
-
-            <!-- JUMLAH SUDAH TERKUNCI -->
-            
-                <input id="qty" type="number" readonly>
-                
-
-            <h3>Metode Pembayaran</h3>
-
-            <select id="method">
-                <option value="">-- pilih metode --</option>
-                <option value="BCA">Transfer BCA</option>
-                <option value="DANA">DANA</option>
-                <option value="SHOPEE">ShopeePay</option>
-                <option value="SEABANK">SeaBank</option>
-            </select>
-
-            <div id="payBCA" class="payment-detail hidden">
-                <b>BCA:</b><br>
-                <span id="bca">3781058147</span><br>
-                <button class="copy-btn" type="button" onclick="copyRek('bca')">Copy</button>
+            <div class="transaksi-container">
+                <div class="transaksi-header">
+                    <h2>Transaksi #<%= order.id_order %></h2>
+                    <div class="meta">Status: <strong><%= order.status %></strong></div>
+                    <div class="meta">Tanggal: <%= new Date(order.tanggal).toLocaleString('id-ID') %></div>
+                    <div class="total">Total: Rp <%= order.total.toLocaleString('id-ID') %></div>
+                </div>
+                <div class="produk-list">
+                    <h3 style="margin-bottom:16px;font-size:1.1rem;color:#c72825;font-weight:600;">Produk yang dipesan:</h3>
+                    <% if (items && items.length > 0) { %>
+                        <% items.forEach(item => { %>
+                            <div class="produk-card">
+                                <h4><%= item.nama_produk %></h4>
+                                <p>Harga: Rp <%= item.harga_produk.toLocaleString('id-ID') %></p>
+                                <p>Jumlah: <%= item.jumlah_produk %></p>
+                                <p>Total: <strong>Rp <%= item.total.toLocaleString('id-ID') %></strong></p>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <p style="color:#888;">Tidak ada produk pada transaksi ini.</p>
+                    <% } %>
+                </div>
             </div>
 
-            <div id="payDANA" class="payment-detail hidden">
-                <b>DANA:</b><br>
-                <span id="dana">089512151738</span><br>
-                <button class="copy-btn" type="button" onclick="copyRek('dana')">Copy</button>
-            </div>
-
-            <div id="payShopee" class="payment-detail hidden">
-                <b>ShopeePay:</b><br>
-                <span id="shopee">089512151738</span><br>
-                <button class="copy-btn" type="button" onclick="copyRek('shopee')">Copy</button>
-            </div>
-
-            <div id="paySea" class="payment-detail hidden">
-                <b>SeaBank:</b><br>
-                <span id="sea">901743865276</span><br>
-                <button class="copy-btn" type="button" onclick="copyRek('sea')">Copy</button>
-            </div>
-
-            <button class="btn-lanjut" onclick="moveToTransaction()">Lanjutkan ke Transaksi</button>
+            <footer class="footer">
+                <p>&copy; 2025 Rice Katsu - Semua Hak Dilindungi</p>
+            </footer>
         </div>
-
-        <div id="transaction-section">
-            <h2>RINGKASAN PESANAN</h2>
-
-            <label>ID Pembeli</label>
-            <input type="text" id="idPembeli" value="U-12345" readonly>
-
-            <label>Nama Produk</label>
-            <input type="text" id="transaksiProduk" readonly>
-
-            <label>Harga Produk </label>
-            <input type="text" id="transaksiHarga" readonly>
-
-            <label>Jumlah Produk</label>
-            <input type="text" id="transaksiJumlah" readonly>
-
-            <label>Total Harga</label>
-            <input type="text" id="totalHarga" readonly>
-
-            <label>Metode Pembayaran</label>
-            <input type="text" id="transaksiMetode" readonly>
-            
-            <label>Status Pesanan</label>
-            <input type="text" id="statusProduk" value="Menunggu Konfirmasi Admin" readonly>
-
-            <div class="transaction-info">
-                <p>Silakan segera lakukan pembayaran sebesar <b><span id="paymentTotalFinal"></span></b> ke rekening yang dipilih.</p>
-                <p>Bukti transfer dapat dikirimkan melalui WhatsApp.</p>
-            </div>
-
-            <button class="btn-lanjut" onclick="backToCheckout()">⬅ Koreksi Pesanan</button>
-            <button class="btn-lanjut" style="margin-top: 10px;" onclick="submitOrder()">Buat Pesanan & Selesai</button>
-
-        </div>
-
     </div>
-
-<script>
-    const PRODUCT_PRICE = 12000;
-    
-        const dataDariStorage = JSON.parse(localStorage.getItem("cart"));
-        document.getElementById("qty").value = dataDariStorage[0].quantity;
-
-        console.log(dataDariStorage)
-    function rupiah(x) {
-        return "Rp " + Number(x).toLocaleString("id-ID");
-    }
-
-    function backToHome() {
-        window.location.href = "/";
-    }
-
-    // 🔒 JUMLAH TIDAK BISA DIUBAH
-    function changeQty(val) {
-        return; 
-    }
-
-    function updateTotal() {
-        let total = PRODUCT_PRICE * 1;
-        document.getElementById("totalView").innerText = rupiah(total);
-    }
-
-    document.getElementById("method").addEventListener("change", () => {
-        let m = document.getElementById("method").value;
-
-        document.querySelectorAll('.payment-detail').forEach(el => el.classList.add('hidden'));
-
-        if (m === "BCA") document.getElementById("payBCA").classList.remove("hidden");
-        if (m === "DANA") document.getElementById("payDANA").classList.remove("hidden");
-        if (m === "SHOPEE") document.getElementById("payShopee").classList.remove("hidden");
-        if (m === "SEABANK") document.getElementById("paySea").classList.remove("hidden");
-    });
-
-    function copyRek(id) {
-        let text = document.getElementById(id).innerText;
-
-        navigator.clipboard.writeText(text).then(() => {
-            alert("Nomor berhasil dicopy!");
-        });
-    }
-
-    function moveToTransaction() {
-        const dataDariStorage = JSON.parse(localStorage.getItem("cart"));
-        let qty = dataDariStorage[0].quantity;
-        let method = document.getElementById("method").value;
-        let total = qty * PRODUCT_PRICE;
-        let productName = document.getElementById("productName").value;
-
-        if (!method) {
-            alert("Pilih metode pembayaran dulu!");
-            return;
-        }
-
-        // console.log(dataDariStorage)
-
-        document.getElementById("transaksiProduk").value = productName;
-        document.getElementById("transaksiHarga").value = rupiah(PRODUCT_PRICE);
-        document.getElementById("transaksiJumlah").value = dataDariStorage[0].quantity;
-        
-        document.getElementById("totalHarga").value = rupiah(dataDariStorage[0].quantity * PRODUCT_PRICE);
-        document.getElementById("transaksiMetode").value = method;
-        document.getElementById("paymentTotalFinal").innerText = rupiah(total);
-
-        const userID = localStorage.getItem("userID") || "GUEST-001"; 
-        document.getElementById("idPembeli").value = userID;
-
-        document.getElementById("checkout-section").style.display = "none";
-        document.getElementById("transaction-section").style.display = "block";
-    }
-    
-    function backToCheckout() {
-        document.getElementById("checkout-section").style.display = "block";
-        document.getElementById("transaction-section").style.display = "none";
-    }
-
-    async function submitOrder() {
-        const dataDariStorage = JSON.parse(localStorage.getItem("cart"));
-        let qty = dataDariStorage[0].quantity;
-        let idPembeli = document.getElementById("idPembeli").value;
-        let produk = document.getElementById("transaksiProduk").value;
-        let idTransaksiproduk = document.getElementById("transaksiProduk").value;
-        let idTransaksiHarga = document.getElementById("transaksiHarga").value;
-        let idTransaksiJumlah = document.getElementById("transaksiJumlah").value;
-        let total = document.getElementById("totalHarga").value;
-        let idTransaksiMetode = document.getElementById("transaksiMetode").value;
-        
-
-        alert(`✅ Pesanan "${produk}" dengan total ${total} berhasil dibuat! Admin akan segera memprosesnya.`);
-        const data = {
-            idPembeli: idPembeli,
-            produk: produk,
-            harga: PRODUCT_PRICE,
-            jumlah: qty,
-            total: qty * PRODUCT_PRICE,
-            metode: idTransaksiMetode
-        }
-
-        try {
-            const response = await fetch("http://localhost:3000/checkout", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        });
-
-        const result = await response.json();
-        
-        console.log(result);
-        } catch (error) {
-            console.log("Error:", error);
-        }
-
-     
-        backToHome();
-    }
-
-    window.onload = function() {
-        updateTotal();
-    };
-</script>
-
 </body>
 </html>

@@ -34,6 +34,30 @@ CREATE TABLE `products` (
   `imageUrl` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- Tabel orders
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_user INT NOT NULL,
+    tanggal DATETIME NOT NULL,
+    total DECIMAL(10, 2) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    FOREIGN KEY (id_user) REFERENCES users(id)
+);
+
+-- Tabel order_items
+CREATE TABLE order_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    id_user INT NOT NULL,
+    harga_produk DECIMAL(10, 2) NOT NULL,
+    jumlah_produk INT NOT NULL,
+    total DECIMAL(10, 2) NOT NULL,
+    status_produk VARCHAR(50) NOT NULL,
+    nama_produk VARCHAR(100) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (id_user) REFERENCES users(id) -- Asumsi ada tabel pembeli dengan kolom id_pembeli
+);
+
 --
 -- Dumping data untuk tabel `products`
 --
