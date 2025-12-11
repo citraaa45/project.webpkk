@@ -9,6 +9,7 @@
     </title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/style.css">
 </head>
 
@@ -70,63 +71,179 @@
 
             <!-- HERO SECTION -->
             <header class="top">
-                <img src="/top.png" alt="Hero Image" style="width:100%;height: 350px;margin-top: -25px;">
+                <img src="/top.png" alt="Hero Image" class="rounded rounded-md shadow-lg" style="width:100%;height: 350px;margin-top: -25px;">
                 <div class="wraptext">
                     <a class="top-button">Beli Sekarang</a>
                 </div>
             </header>
 
             <!-- INTRO SECTION -->
-            <div style="margin-top: 200px;" class="contenttext">
-                <h1>"Dengan semangkuk nasi hangat dan ayam katsu yang crispy di luar dan juicy di dalam"</h1>
-            </div>
+            <section class="mt-32 py-16 px-4 bg-[#fff1b2]">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight text-[#c72825] mb-6">
+                        <span class="text-[#c72825]">"Dengan semangkuk nasi hangat</span> dan ayam katsu yang crispy di luar dan juicy di dalam<span class="text-[#c72825]">"</span>
+                    </h1>
+                </div>
+            </section>
 
             <!-- PRODUCT LIST -->
             <section class="wrapcontent" id="product-list">
-                <% if (products && products.length> 0) { %>
-                    <% products.forEach(product=> { %>
-                        <div class="product-card">
-                            <img src="katsu.png" alt="<%= product.name %>" />
-                            <h3 class="name">
-                                <%= product.name %>
-                            </h3>
-                            <p class="price">Rp <%= product.price.toLocaleString('id-ID') %>
-                            </p>
-                            <button class="btn-keranjang"
-                                onclick="addToCart('<%= product.id %>', '<%= product.name %>', <%= product.price %>)">
-                                + Keranjang
-                            </button>
-                        </div>
+                <% if (products && products.length > 0) { %>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 py-12">
+                        <% products.forEach(product => { %>
+                            <div class="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-200 overflow-hidden hover:-translate-y-2">
+                                <!-- Product Image Container -->
+                                <div class="relative w-full h-64 bg-gradient-to-br from-orange-50 to-red-50 overflow-hidden">
+                                    <img src="katsu.png" alt="<%= product.name %>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
+                                    <!-- Overlay Badge -->
+                                    <div class="absolute top-3 right-3 bg-[#c72825] text-white px-3 py-1 rounded-full text-xs font-bold">
+                                        PRODUK
+                                    </div>
+                                </div>
+
+                                <!-- Product Info -->
+                                <div class="p-5 flex flex-col gap-4">
+                                    <div>
+                                        <h3 class="name text-lg font-bold text-gray-900 group-hover:text-[#c72825] transition-colors duration-200 mb-2 line-clamp-2">
+                                            <%= product.name %>
+                                        </h3>
+                                        <% if (product.description) { %>
+                                            <p class="text-sm text-gray-600 line-clamp-2 mb-3">
+                                                <%= product.description %>
+                                            </p>
+                                        <% } %>
+                                    </div>
+                                    <!-- Price -->
+                                    <div>
+                                        <p class="text-2xl font-extrabold text-[#c72825] mb-1">
+                                            Rp <%= product.price.toLocaleString('id-ID') %>
+                                        </p>
+                                        <span class="text-xs text-gray-500">Harga per porsi</span>
+                                    </div>
+
+                                    <!-- Add to Cart Button -->
+                                    <button
+                                        class="w-full mt-2 bg-gradient-to-r from-[#c72825] to-[#e17055] hover:from-[#a91f1f] hover:to-[#c75845] text-white font-semibold py-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow hover:shadow-lg active:scale-95"
+                                        onclick="addToCart('<%= product.id %>', '<%= product.name %>', <%= product.price %>)"
+                                    >
+                                        <i class="bi bi-bag-plus text-lg"></i>
+                                        <span class="text-base">Tambah ke Keranjang</span>
+                                    </button>
+                                </div>
+                            </div>
                         <% }); %>
-                            <% } else { %>
-                                <p style="text-align: center; color: #999;">Data produk sedang dimuat...</p>
-                                <% } %>
+                    </div>
+                <% } else { %>
+                    <div class="text-center py-12">
+                        <i class="bi bi-inbox text-5xl text-gray-300 mb-3"></i>
+                        <p class="text-gray-500 font-medium text-lg">Data produk sedang dimuat...</p>
+                    </div>
+                <% } %>
             </section>
 
             <!-- CONTENT SECTION 2 -->
-            <section class="contenttext">
-                <h2>BAHAN PREMIUM & HARGA TERJANGKAU</h2>
+            <section class="py-20 px-4 bg-[#fff1b2]">
+                <div class="max-w-6xl mx-auto">
+                    <h2 class="text-center text-3xl md:text-4xl font-bold text-[#c72825] mb-16 uppercase tracking-wide">
+                        Bahan Premium & Harga Terjangkau
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                        <!-- Text Content -->
+                        <div class="flex flex-col justify-center">
+                            <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6 leading-tight">
+                                Pastinya akan membuat perutmu <span class="text-[#c72825]">kenyang</span> karena:
+                            </h3>
+                            <ul class="space-y-4">
+                                <li class="flex items-start gap-4">
+                                    <span class="text-2xl text-[#c72825] font-bold mt-1">✓</span>
+                                    <div>
+                                        <p class="text-lg font-semibold text-gray-900">Porsi yang Memuaskan</p>
+                                        <p class="text-gray-600">Setiap porsi dirancang untuk memberikan kepuasan maksimal</p>
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-4">
+                                    <span class="text-2xl text-[#c72825] font-bold mt-1">✓</span>
+                                    <div>
+                                        <p class="text-lg font-semibold text-gray-900">Harga Terjangkau</p>
+                                        <p class="text-gray-600">Nikmati kualitas premium dengan harga yang ramah di kantong</p>
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-4">
+                                    <span class="text-2xl text-[#c72825] font-bold mt-1">✓</span>
+                                    <div>
+                                        <p class="text-lg font-semibold text-gray-900">Bahan Berkualitas</p>
+                                        <p class="text-gray-600">Kami hanya menggunakan bahan-bahan terbaik untuk setiap hidangan</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Image Content -->
+                        <div class="flex justify-center">
+                            <div class="rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300">
+                                <img class="w-full h-auto object-cover" src="chicken.jpg" alt="Ayam Katsu Premium">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
 
-            <div class="content2">
-                <div class="wraptext2">
-                    <h1>PASTINYA AKAN MEMBUAT PERUTMU KENYANG KARNA PORSI YANG MEMUASKAN DAN HARGA TERJANGKAU</h1>
-                </div>
-                <div style="padding: 30px;">
-                    <img class="image image2" src="chicken.jpg" alt="">
-                </div>
-            </div>
-
             <!-- LOCATION & MAP -->
-            <section class="content3">
-                <img style="width: 100%; object-fit: cover;" src="/lastimg.png" alt="Dekorasi">
-                <div class="container1">
-                    <div id="Alamat" class="addres">Alamat kami:</div>
-                    <div class="map-container">
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3965.0542301721275!2d107.4569362749917!3d-6.387003393603428!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zNsKwMjMnMTMuMiJTIDEwN8KwMjcnMzQuMiJF!5e0!3m2!1sid!2sid!4v1748781182241!5m2!1sid!2sid"
-                            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <section class="relative py-20 px-4">
+                <!-- Background Image -->
+                <img class="absolute inset-0 w-full h-full object-cover -z-10" src="/lastimg.png" alt="Dekorasi">
+                
+                <div class="max-w-6xl mx-auto relative z-10">
+                    <!-- Section Title -->
+                    <div class="text-center mb-12 text-[#d44a3c]">
+                        <h2 class="text-4xl md:text-5xl font-bold mb-2 drop-shadow-lg">
+                            Kunjungi Kami
+                        </h2>
+                        <p class="text-xl drop-shadow-md">Temukan lokasi Rice Katsu terdekat</p>
+                    </div>
+
+                    <!-- Map Container -->
+                    <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+                        <div class="p-8 bg-gradient-to-r from-[#c72825] to-[#e17055]">
+                            <h3 class="text-2xl md:text-3xl font-bold text-white mb-2 flex items-center gap-2">
+                                <i class="bi bi-geo-alt-fill"></i>
+                                Alamat Kami
+                            </h3>
+                            <p class="text-orange-100">Kunjungi toko kami atau gunakan Google Maps di bawah untuk mendapatkan petunjuk arah</p>
+                        </div>
+                        
+                        <div class="p-6 md:p-8 bg-gray-50">
+                            <div class="rounded-xl overflow-hidden shadow-lg">
+                                <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3965.0542301721275!2d107.4569362749917!3d-6.387003393603428!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zNsKwMjMnMTMuMiJTIDEwN8KwMjcnMzQuMiJF!5e0!3m2!1sid!2sid!4v1748781182241!5m2!1sid!2sid"
+                                    style="border:0;" 
+                                    allowfullscreen="" 
+                                    loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade"
+                                    class="w-full">
+                                </iframe>
+                            </div>
+                        </div>
+
+                        <!-- Contact Info Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-8 bg-white border-t border-gray-200">
+                            <a href="https://wa.me/6289650022527" target="_blank" class="text-center p-6 rounded-lg hover:bg-orange-50 transition-colors duration-200">
+                                <i class="bi bi-whatsapp text-4xl text-[#c72825] mb-3"></i>
+                                <h4 class="font-bold text-gray-900 mb-2">WhatsApp</h4>
+                                <p class="text-gray-600 text-sm">+62 896-5002-2527</p>
+                            </a>
+                            <a href="mailto:ricekatsu26@gmail.com" target="_blank" class="text-center p-6 rounded-lg hover:bg-orange-50 transition-colors duration-200">
+                                <i class="bi bi-envelope text-4xl text-[#c72825] mb-3"></i>
+                                <h4 class="font-bold text-gray-900 mb-2">Email</h4>
+                                <p class="text-gray-600 text-sm">ricekatsu26@gmail.com</p>
+                            </a>
+                            <div class="text-center p-6 rounded-lg hover:bg-orange-50 transition-colors duration-200">
+                                <i class="bi bi-clock text-4xl text-[#c72825] mb-3"></i>
+                                <h4 class="font-bold text-gray-900 mb-2">Jam Operasional</h4>
+                                <p class="text-gray-600 text-sm">10:00 - 21:00 (Setiap hari)</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
