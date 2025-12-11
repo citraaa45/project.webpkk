@@ -25,6 +25,17 @@ app.use(
   })
 );
 
+// Middleware untuk cek admin
+function isAdmin(req, res, next) {
+  if (!req.session.user) {
+    return res.redirect("/login");
+  }
+  if (req.session.user.role !== "admin") {
+    return res.status(403).send("Akses ditolak! Anda bukan admin.");
+  }
+  next();
+}
+
 app.get("/", async (req, res) => {
   try {
     const query = "SELECT * FROM products";
@@ -83,12 +94,15 @@ app.post("/login_submit", async (req, res) => {
     req.session.user = {
       id: user.id,
       email: user.email,
-      name: user.name,
       role: user.role,
       address: user.address,
     };
 
-    res.redirect("/");
+    if(user.role == "admin"){
+      res.redirect("/admin");
+    } else {
+      res.redirect("/");
+    }
   } catch (error) {
     console.error("Error login:", error);
     res.render("login", {
@@ -155,6 +169,13 @@ app.post("/register_submit", async (req, res) => {
   }
 });
 
+// 🚪 Route Logout
+app.get("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.redirect("/");
+  });
+});
+
 // 🛒 Route Checkout
 app.post("/checkout", async (req, res) => {
   try {
@@ -203,14 +224,6 @@ app.post("/checkout", async (req, res) => {
   }
 });
 
-// 🚪 Route Logout
-app.get("/logout", (req, res) => {
-  req.session.destroy(() => {
-    res.redirect("/");
-  });
-});
-
-
 // Route detail transaksi
 app.get("/transaksi/:id", async (req, res) => {
   const orderId = req.params.id;
@@ -237,16 +250,141 @@ app.get("/transaksi/:id", async (req, res) => {
   }
 });
 
-app.get("/admin", async (req, res) => {
-  const query = "SELECT * FROM products";
-  const [products] = await db.query(query);
+// ========== ADMIN ROUTES ==========
 
-  res.render("admin", {
-    title: "Admin Dashboard - Rice Katsu",
-    // isLoggedIn: req.session.user ? true : false,
-    // user: req.session.user || null,
-    // clientJs: getClientJs()
-  });
+// Dashboard Admin
+app.get("/admin", isAdmin, async (req, res) => {
+  try {
+    res.render("admin", {
+      title: "Admin Dashboard - Rice Katsu",
+      user: req.session.user,
+    });
+  } catch (error) {
+    console.error("Error admin dashboard:", error);
+    res.status(500).send("Terjadi kesalahan server!");
+  }
+});
+
+// API: Get all orders for admin
+app.get("/api/admin/orders", isAdmin, async (req, res) => {
+  try {
+    const [orders] = await db.query(`
+      SELECT o.*, u.email as user_email 
+      FROM orders o 
+      LEFT JOIN users u ON o.id_user = u.id 
+      ORDER BY o.tanggal DESC
+    `);
+    res.json({ success: true, orders });
+  } catch (error) {
+    console.error("Error get orders:", error);
+    res.status(500).json({ success: false, message: "Terjadi kesalahan server!" });
+  }
+});
+
+// API: Get order detail for admin
+app.get("/api/admin/orders/:id", isAdmin, async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    const [orderRows] = await db.query(`
+      SELECT o.*, u.email as user_email, u.address as user_address 
+      FROM orders o 
+      LEFT JOIN users u ON o.id_user = u.id 
+      WHERE o.id = ?
+    `, [orderId]);
+    
+    if (orderRows.length === 0) {
+      return res.status(404).json({ success: false, message: "Order tidak ditemukan" });
+    }
+    
+    const [items] = await db.query("SELECT * FROM order_items WHERE order_id = ?", [orderId]);
+    
+    res.json({ success: true, order: orderRows[0], items });
+  } catch (error) {
+    console.error("Error get order detail:", error);
+    res.status(500).json({ success: false, message: "Terjadi kesalahan server!" });
+  }
+});
+
+// API: Update order status
+app.put("/api/admin/orders/:id/status", isAdmin, async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    const { status } = req.body;
+    
+    await db.query("UPDATE orders SET status = ? WHERE id = ?", [status, orderId]);
+    
+    res.json({ success: true, message: "Status order berhasil diupdate!" });
+  } catch (error) {
+    console.error("Error update order status:", error);
+    res.status(500).json({ success: false, message: "Terjadi kesalahan server!" });
+  }
+});
+
+// API: Get all products for admin
+app.get("/api/admin/products", isAdmin, async (req, res) => {
+  try {
+    const [products] = await db.query("SELECT * FROM products ORDER BY id DESC");
+    res.json({ success: true, products });
+  } catch (error) {
+    console.error("Error get products:", error);
+    res.status(500).json({ success: false, message: "Terjadi kesalahan server!" });
+  }
+});
+
+// API: Add product
+app.post("/api/admin/products", isAdmin, async (req, res) => {
+  try {
+    const { name, price, description } = req.body;
+    
+    if (!name || !price) {
+      return res.status(400).json({ success: false, message: "Nama dan harga produk harus diisi!" });
+    }
+    
+    const [result] = await db.query(
+      "INSERT INTO products (name, price, description) VALUES (?, ?, ?)",
+      [name, price, description || ""]
+    );
+    
+    res.json({ success: true, message: "Produk berhasil ditambahkan!", productId: result.insertId });
+  } catch (error) {
+    console.error("Error add product:", error);
+    res.status(500).json({ success: false, message: "Terjadi kesalahan server!" });
+  }
+});
+
+// API: Update product
+app.put("/api/admin/products/:id", isAdmin, async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const { name, price, description } = req.body;
+    
+    if (!name || !price) {
+      return res.status(400).json({ success: false, message: "Nama dan harga produk harus diisi!" });
+    }
+    
+    await db.query(
+      "UPDATE products SET name = ?, price = ?, description = ? WHERE id = ?",
+      [name, price, description || "", productId]
+    );
+    
+    res.json({ success: true, message: "Produk berhasil diupdate!" });
+  } catch (error) {
+    console.error("Error update product:", error);
+    res.status(500).json({ success: false, message: "Terjadi kesalahan server!" });
+  }
+});
+
+// API: Delete product
+app.delete("/api/admin/products/:id", isAdmin, async (req, res) => {
+  try {
+    const productId = req.params.id;
+    await db.query("DELETE FROM products WHERE id = ?", [productId]);
+    
+    res.json({ success: true, message: "Produk berhasil dihapus!" });
+  } catch (error) {
+    console.error("Error delete product:", error);
+    res.status(500).json({ success: false, message: "Terjadi kesalahan server!" });
+  }
 });
 
 app.use((err, req, res, next) => {

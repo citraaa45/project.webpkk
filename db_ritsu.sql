@@ -20,7 +20,9 @@ SET time_zone = "+00:00";
 --
 -- Database: `db_ritsu`
 --
-
+DROP DATABASE IF EXISTS `db_ritsu`;
+CREATE DATABASE `db_ritsu` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `db_ritsu`;
 -- --------------------------------------------------------
 
 --
@@ -31,8 +33,66 @@ CREATE TABLE `products` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `price` float NOT NULL,
-  `imageUrl` text NOT NULL
+  `imageUrl` text NOT NULL,
+  `description` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `products`
+--
+
+INSERT INTO `products` (`id`, `name`, `price`, `imageUrl`, `description`) VALUES
+(1, 'Ayam Katsu Original', 12000, 'katsu.png', 'Nasi dengan ayam katsu original yang crispy dan lezat'),
+(2, 'Ayam Katsu Spicy', 5000, 'katsu.png', 'Nasi dengan ayam katsu pedas yang menggugah selera'),
+(3, 'Beef Katsu', 9000, 'katsu.png', 'Nasi dengan beef katsu yang empuk dan gurih');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` enum('user','admin','','') NOT NULL,
+  `address` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `users`
+--
+
+INSERT INTO `users` (`id`, `email`, `password`, `role`, `address`) VALUES
+(1, 'admin@gmail.com', 'admin123', 'admin', 'Jl. Admin No. 123'),
+(2, 'user@gmail.com', 'user123', 'user', 'Jl. User No. 456');
+
+
+--
+-- Indeks untuk tabel `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+-- AUTO_INCREMENT untuk tabel `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT untuk tabel `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+COMMIT;
+
 
 -- Tabel orders
 CREATE TABLE orders (
@@ -58,68 +118,6 @@ CREATE TABLE order_items (
     FOREIGN KEY (id_user) REFERENCES users(id) -- Asumsi ada tabel pembeli dengan kolom id_pembeli
 );
 
---
--- Dumping data untuk tabel `products`
---
-
-INSERT INTO `products` (`id`, `name`, `price`, `imageUrl`) VALUES
-(4, 'Ayam Katsu Original', 12000, 'katsu.png'),
-(5, 'Ayam Katsu Spicy', 5000, 'katsu.png'),
-(6, 'Beef Katsu', 9000, 'katsu.png');
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `users`
---
-
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `role` enum('user','admin','','') NOT NULL,
-  `address` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data untuk tabel `users`
---
-
-INSERT INTO `users` (`id`, `email`, `password`, `role`, `address`) VALUES
-(1, 'admin@gmail.com', 'admin123', 'user', '123');
-
---
--- Indexes for dumped tables
---
-
---
--- Indeks untuk tabel `products`
---
-ALTER TABLE `products`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indeks untuk tabel `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT untuk tabel yang dibuang
---
-
---
--- AUTO_INCREMENT untuk tabel `products`
---
-ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT untuk tabel `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

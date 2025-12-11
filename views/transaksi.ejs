@@ -5,127 +5,146 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="/style.css">
-    <style>
-        body {
-            font-family: 'Poppins', Arial, sans-serif;
-            background: #f8f8fa;
-            margin: 0;
-        }
-        .transaksi-container {
-            max-width: 700px;
-            margin: 120px auto 40px auto;
-            background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-            padding: 32px 28px 24px 28px;
-        }
-        .transaksi-header {
-            border-bottom: 1px solid #ececec;
-            margin-bottom: 24px;
-            padding-bottom: 18px;
-        }
-        .transaksi-header h2 {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #c72825;
-            margin: 0 0 8px 0;
-        }
-        .transaksi-header .meta {
-            font-size: 1rem;
-            color: #888;
-            margin-bottom: 4px;
-        }
-        .transaksi-header .total {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #e17055;
-        }
-        .produk-list {
-            margin-top: 18px;
-        }
-        .produk-card {
-            background: #f9f9fc;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            padding: 18px 20px;
-            margin-bottom: 18px;
-            display: flex;
-            flex-direction: column;
-        }
-        .produk-card h4 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin: 0 0 6px 0;
-            color: #c72825;
-        }
-        .produk-card p {
-            margin: 2px 0;
-            font-size: 0.98rem;
-            color: #444;
-        }
-        .produk-card .produk-status {
-            font-size: 0.95rem;
-            color: #e17055;
-            font-weight: 500;
-            margin-top: 6px;
-        }
-        @media (max-width: 800px) {
-            .transaksi-container {
-                max-width: 98vw;
-                padding: 18px 8px 12px 8px;
-            }
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="">
-        <div class="parent">
-            <nav class="navbar">
-                <div class="navbar-left">
-                    <a href="/" class="logo-link"><img class="logo" src="/logo.png" alt="Rice Katsu Logo"></a>
-                </div>
-                <div class="navbar-right">
-                    <% if (user) { %>
-                        <span class="user-greeting">Halo, <%= user.name || user.email %></span>
-                        <a href="/logout" class="icon" title="Logout"><i class="bi bi-box-arrow-in-left"></i></a>
-                    <% } else { %>
-                        <a href="/login" class="icon" title="Login"><i class="bi bi-person-circle"></i></a>
-                    <% } %>
-                </div>
-            </nav>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 font-['Poppins']">
+    <div class="min-h-screen flex flex-col">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="navbar-left">
+                <a href="/" class="logo-link"><img class="logo" src="/logo.png" alt="Rice Katsu Logo"></a>
+            </div>
+            <div class="navbar-right">
+                <% if (user) { %>
+                    <span class="user-greeting">Halo, <%= user.name || user.email %></span>
+                    <a href="/logout" class="icon" title="Logout"><i class="bi bi-box-arrow-in-left"></i></a>
+                <% } else { %>
+                    <a href="/login" class="icon" title="Login"><i class="bi bi-person-circle"></i></a>
+                <% } %>
+            </div>
+        </nav>
 
+        <!-- Main Content -->
+        <main class="flex-1 py-12 mt-12 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-2xl mt-4 lg:pt-6 mx-auto">
+                <!-- Header Card -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-6">
+                    <!-- Top Banner dengan Gradient -->
+                    <div class="bg-gradient-to-r from-[#c72825] to-[#e17055] px-8 py-8 text-white">
+                        <div class="flex items-center justify-between mb-2">
+                            <h1 class="text-3xl md:text-4xl font-bold">Transaksi #<%= order.id_order %></h1>
+                            <% 
+                                let statusColor = '';
+                                let statusIcon = '';
+                                if (order.status === 'pending') {
+                                    statusColor = 'bg-yellow-100 text-yellow-800';
+                                    statusIcon = 'bi-hourglass-split';
+                                } else if (order.status === 'completed') {
+                                    statusColor = 'bg-green-100 text-green-800';
+                                    statusIcon = 'bi-check-circle';
+                                } else if (order.status === 'cancelled') {
+                                    statusColor = 'bg-red-100 text-red-800';
+                                    statusIcon = 'bi-x-circle';
+                                }
+                            %>
+                            <span class="<%= statusColor %> px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2">
+                                <i class="bi <%= statusIcon %>"></i>
+                                <%= order.status %>
+                            </span>
+                        </div>
+                        <p class="text-orange-100 text-sm">Transaksi dibuat pada <%= new Date(order.tanggal).toLocaleString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %></p>
+                    </div>
 
-            <div class="transaksi-container">
-                <div class="transaksi-header">
-                    <h2>Transaksi #<%= order.id_order %></h2>
-                    <div class="meta">Status: <strong><%= order.status %></strong></div>
-                    <div class="meta">Tanggal: <%= new Date(order.tanggal).toLocaleString('id-ID') %></div>
-                    <div class="total">Total: Rp <%= order.total.toLocaleString('id-ID') %></div>
+                    <!-- Total Amount Card -->
+                    <div class="px-8 py-6 bg-gray-50 border-b border-gray-200">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 font-medium">Total Pembayaran:</span>
+                            <span class="text-3xl font-bold text-[#c72825]">Rp <%= order.total.toLocaleString('id-ID') %></span>
+                        </div>
+                    </div>
                 </div>
-                <div class="produk-list">
-                    <h3 style="margin-bottom:16px;font-size:1.1rem;color:#c72825;font-weight:600;">Produk yang dipesan:</h3>
-                    <% if (items && items.length > 0) { %>
-                        <% items.forEach(item => { %>
-                            <div class="produk-card">
-                                <h4><%= item.nama_produk %></h4>
-                                <p>Harga: Rp <%= item.harga_produk.toLocaleString('id-ID') %></p>
-                                <p>Jumlah: <%= item.jumlah_produk %></p>
-                                <p>Total: <strong>Rp <%= item.total.toLocaleString('id-ID') %></strong></p>
+
+                <!-- Produk List -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="px-8 py-6 border-b border-gray-200">
+                        <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                            <i class="bi bi-bag-check text-[#c72825]"></i>
+                            Produk yang Dipesan
+                        </h2>
+                    </div>
+
+                    <div class="divide-y divide-gray-200">
+                        <% if (items && items.length > 0) { %>
+                            <% items.forEach((item, index) => { %>
+                                <div class="px-8 py-6 hover:bg-gray-50 transition-colors duration-200">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <div class="flex-1">
+                                            <h3 class="text-lg font-bold text-[#c72825] mb-1">
+                                                <span class="text-sm text-gray-500 font-normal">#<%= index + 1 %></span> <%= item.nama_produk %>
+                                            </h3>
+                                            <p class="text-sm text-gray-600">Harga Satuan</p>
+                                        </div>
+                                        <span class="text-sm bg-[#f0bc73] bg-opacity-20 text-[#c72825] px-3 py-1 rounded-full font-semibold">
+                                            × <%= item.jumlah_produk %>
+                                        </span>
+                                    </div>
+
+                                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4 pt-4 border-t border-gray-200">
+                                        <div>
+                                            <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Harga Satuan</p>
+                                            <p class="text-lg font-bold text-gray-900">Rp <%= item.harga_produk.toLocaleString('id-ID') %></p>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Jumlah</p>
+                                            <p class="text-lg font-bold text-gray-900"><%= item.jumlah_produk %> pcs</p>
+                                        </div>
+                                        <div class="col-span-2 md:col-span-1">
+                                            <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Subtotal</p>
+                                            <p class="text-lg font-bold text-[#c72825]">Rp <%= item.total.toLocaleString('id-ID') %></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        <% } else { %>
+                            <div class="px-8 py-12 text-center">
+                                <i class="bi bi-inbox text-4xl text-gray-300 mb-3"></i>
+                                <p class="text-gray-500 font-medium">Tidak ada produk pada transaksi ini</p>
                             </div>
-                        <% }) %>
-                    <% } else { %>
-                        <p style="color:#888;">Tidak ada produk pada transaksi ini.</p>
+                        <% } %>
+                    </div>
+
+                    <!-- Summary Footer -->
+                    <% if (items && items.length > 0) { %>
+                        <div class="px-8 py-6 bg-gray-50">
+                            <div class="flex justify-between items-center mb-3 pb-3 border-b border-gray-200">
+                                <span class="text-gray-600">Subtotal:</span>
+                                <span class="font-semibold text-gray-900">Rp <%= order.total.toLocaleString('id-ID') %></span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-gray-900">Total Pembayaran:</span>
+                                <span class="text-2xl font-bold text-[#c72825]">Rp <%= order.total.toLocaleString('id-ID') %></span>
+                            </div>
+                        </div>
                     <% } %>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+                    <a href="/" class="flex items-center justify-center gap-2 px-6 py-3 bg-white text-[#c72825] border-2 border-[#c72825] rounded-lg font-semibold hover:bg-[#c72825] hover:text-white transition-colors duration-200">
+                        <i class="bi bi-house"></i>
+                        Kembali ke Beranda
+                    </a>
                 </div>
             </div>
+        </main>
 
-            <footer class="footer">
-                <p>&copy; 2025 Rice Katsu - Semua Hak Dilindungi</p>
-            </footer>
-        </div>
+        <!-- Footer -->
+        <footer class="footer mt-12">
+            <p>&copy; 2025 Rice Katsu - Semua Hak Dilindungi</p>
+        </footer>
     </div>
 </body>
 </html>

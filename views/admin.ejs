@@ -3,783 +3,477 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Toko Online</title>
+    <title><%= title %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#c72825',
+                        secondary: '#f0bc73',
+                        accent: '#e17055',
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f5f5;
+            font-family: 'Poppins', sans-serif;
         }
-
-        /* Navbar */
-        .navbar {
-            background: linear-gradient(135deg, #ff9800 0%, #ff6f00 100%);
-            color: white;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .navbar h1 {
-            font-size: 1.8rem;
-        }
-
-        .navbar button {
-            background-color: #fff;
-            color: #ff9800;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .navbar button:hover {
-            background-color: #f0f0f0;
-        }
-
-        /* Container Utama */
-        .container {
-            display: flex;
-            min-height: calc(100vh - 70px);
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
-            background-color: #fff9e6;
-            padding: 2rem 0;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
-        }
-
-        .sidebar ul {
-            list-style: none;
-        }
-
-        .sidebar li {
-            margin: 0;
-        }
-
-        .sidebar a {
-            display: block;
-            padding: 1rem 2rem;
-            color: #333;
-            text-decoration: none;
-            border-left: 4px solid transparent;
-            transition: 0.3s;
-        }
-
-        .sidebar a:hover,
-        .sidebar a.active {
-            background-color: #ffe0b2;
-            border-left-color: #ff9800;
-            color: #ff6f00;
-            font-weight: bold;
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 2rem;
-            overflow-y: auto;
-        }
-
-        .content-section {
-            display: none;
-        }
-
-        .content-section.active {
-            display: block;
-        }
-
-        /* Header Section */
-        .section-header {
-            background-color: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .section-header h2 {
-            color: #ff9800;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Dashboard Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            border-top: 4px solid #ff9800;
-        }
-
-        .stat-card h3 {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-card .value {
-            font-size: 2rem;
-            color: #ff9800;
-            font-weight: bold;
-        }
-
-        /* Table */
-        .table-container {
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead {
-            background-color: #ff9800;
-            color: white;
-        }
-
-        th {
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        td {
-            padding: 1rem;
-            border-bottom: 1px solid #eee;
-        }
-
-        tbody tr:hover {
-            background-color: #fff9e6;
-        }
-
-        /* Buttons */
-        .btn-group {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .btn {
-            padding: 0.6rem 1.2rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.3s;
-            font-size: 0.9rem;
-        }
-
-        .btn-primary {
-            background-color: #ff9800;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #ff6f00;
-        }
-
-        .btn-secondary {
-            background-color: #f0f0f0;
-            color: #333;
-        }
-
-        .btn-secondary:hover {
-            background-color: #e0e0e0;
-        }
-
-        .btn-danger {
-            background-color: #f44336;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: #d32f2f;
-        }
-
-        .btn-edit {
-            background-color: #2196F3;
-            color: white;
-            padding: 0.4rem 0.8rem;
-            font-size: 0.8rem;
-        }
-
-        .btn-delete {
-            background-color: #f44336;
-            color: white;
-            padding: 0.4rem 0.8rem;
-            font-size: 0.8rem;
-        }
-
-        /* Form */
-        .form-container {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #333;
-            font-weight: 600;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-            font-family: inherit;
-        }
-
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #ff9800;
-            box-shadow: 0 0 5px rgba(255, 152, 0, 0.3);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-header h3 {
-            color: #ff9800;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 2rem;
-            cursor: pointer;
-            color: #999;
-        }
-
-        .close-btn:hover {
-            color: #333;
-        }
-
-        /* Status Badge */
-        .badge {
-            display: inline-block;
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .badge-pending {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-
-        .badge-completed {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .badge-shipped {
-            background-color: #cfe2ff;
-            color: #084298;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
-                display: flex;
-                overflow-x: auto;
-            }
-
-            .sidebar ul {
-                display: flex;
-            }
-
-            .sidebar a {
-                border-left: none;
-                border-bottom: 3px solid transparent;
-                padding: 0.5rem 1rem;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
+        .tab-active {
+            border-bottom: 3px solid #c72825;
+            color: #c72825;
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-50">
     <!-- Navbar -->
-    <div class="navbar">
-        <h1>📊 Admin Dashboard</h1>
-        <button><a href="/logout">Logout</a></button>
-    </div>
-
-    <!-- Container -->
-    <div class="container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <ul>
-                <li><a href="#" class="nav-link active" onclick="showSection('dashboard')">📈 Dashboard</a></li>
-                <li><a href="#" class="nav-link" onclick="showSection('orders')">📦 Pesanan</a></li>
-                <li><a href="#" class="nav-link" onclick="showSection('products')">🛍️ Produk</a></li>
-                <li><a href="#" class="nav-link" onclick="showSection('transactions')">💳 Laporan Transaksi</a></li>
-            </ul>
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-primary">🍱 Rice Katsu Admin</h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="text-gray-700">Halo, <strong><%= user.email %></strong></span>
+                    <a href="/" class="px-4 py-2 bg-secondary text-white rounded-lg hover:bg-accent transition">
+                        Ke Website
+                    </a>
+                    <a href="/logout" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+                        Logout
+                    </a>
+                </div>
+            </div>
         </div>
+    </nav>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Dashboard Section -->
-            <div id="dashboard" class="content-section active">
-                <div class="section-header">
-                    <h2>Dashboard Penjualan</h2>
-                    <p>Ringkasan penjualan Anda</p>
+    <!-- Tabs -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        <div class="bg-white rounded-lg shadow-sm">
+            <div class="flex border-b">
+                <button onclick="switchTab('orders')" id="tab-orders" class="tab-active px-6 py-4 font-semibold text-lg focus:outline-none transition">
+                    📦 Pesanan
+                </button>
+                <button onclick="switchTab('products')" id="tab-products" class="px-6 py-4 font-semibold text-lg text-gray-600 hover:text-primary focus:outline-none transition">
+                    🍜 Produk
+                </button>
+            </div>
+
+            <!-- Orders Tab -->
+            <div id="content-orders" class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Daftar Pesanan</h2>
+                    <button onclick="loadOrders()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-red-700 transition">
+                        🔄 Refresh
+                    </button>
                 </div>
-
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h3>Omset Harian</h3>
-                        <div class="value" id="dailyRevenue">Rp 0</div>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Omset Bulanan</h3>
-                        <div class="value" id="monthlyRevenue">Rp 0</div>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Omset Tahunan</h3>
-                        <div class="value" id="yearlyRevenue">Rp 0</div>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Total Pesanan</h3>
-                        <div class="value" id="totalOrders">0</div>
-                    </div>
+                
+                <div id="orders-loading" class="text-center py-12">
+                    <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                    <p class="mt-4 text-gray-600">Memuat pesanan...</p>
+                </div>
+                
+                <div id="orders-list" class="hidden">
+                    <!-- Orders will be loaded here -->
                 </div>
             </div>
 
-            <!-- Orders Section -->
-            <div id="orders" class="content-section">
-                <div class="section-header">
-                    <h2>Pesanan</h2>
-                    <p>Kelola semua pesanan Anda</p>
+            <!-- Products Tab -->
+            <div id="content-products" class="p-6 hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Manajemen Produk</h2>
+                    <button onclick="showAddProductModal()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-red-700 transition">
+                        ➕ Tambah Produk
+                    </button>
                 </div>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>No Pesanan</th>
-                                <th>Pelanggan</th>
-                                <th>Produk</th>
-                                <th>Jumlah</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                                <th>Tanggal</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="ordersTable">
-                            <!-- Data akan diisi dari JavaScript -->
-                        </tbody>
-                    </table>
+                
+                <div id="products-loading" class="text-center py-12">
+                    <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                    <p class="mt-4 text-gray-600">Memuat produk...</p>
                 </div>
-            </div>
-
-            <!-- Products Section -->
-            <div id="products" class="content-section">
-                <div class="section-header">
-                    <h2>Produk</h2>
-                    <p>Kelola produk toko Anda</p>
-                </div>
-
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="openAddProductModal()">+ Tambah Produk</button>
-                </div>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nama Produk</th>
-                                <th>Harga</th>
-                                <th>Stok</th>
-                                <th>Kategori</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="productsTable">
-                            <!-- Data akan diisi dari JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Transactions Section -->
-            <div id="transactions" class="content-section">
-                <div class="section-header">
-                    <h2>Laporan Transaksi</h2>
-                    <p>Detail semua transaksi penjualan</p>
-                </div>
-
-                <div class="btn-group">
-                    <button class="btn btn-secondary" onclick="exportTransactions()">📥 Export PDF</button>
-                </div>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID Transaksi</th>
-                                <th>Tanggal</th>
-                                <th>Pelanggan</th>
-                                <th>Produk</th>
-                                <th>Jumlah</th>
-                                <th>Total</th>
-                                <th>Metode Pembayaran</th>
-                            </tr>
-                        </thead>
-                        <tbody id="transactionsTable">
-                            <!-- Data akan diisi dari JavaScript -->
-                        </tbody>
-                    </table>
+                
+                <div id="products-list" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Products will be loaded here -->
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal Tambah/Edit Produk -->
-    <div id="productModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">Tambah Produk</h3>
-                <button class="close-btn" onclick="closeProductModal()">&times;</button>
+    <!-- Modal Order Detail -->
+    <div id="modal-order-detail" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-primary">Detail Pesanan</h3>
+                <button onclick="closeOrderDetailModal()" class="text-gray-500 hover:text-gray-700 text-3xl">×</button>
             </div>
-            <form onsubmit="saveProduct(event)">
-                <div class="form-group">
-                    <label>Nama Produk</label>
-                    <input type="text" id="productName" required>
+            <div id="order-detail-content" class="p-6">
+                <!-- Order detail will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Add/Edit Product -->
+    <div id="modal-product" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full">
+            <div class="border-b px-6 py-4 flex justify-between items-center">
+                <h3 id="product-modal-title" class="text-xl font-bold text-primary">Tambah Produk</h3>
+                <button onclick="closeProductModal()" class="text-gray-500 hover:text-gray-700 text-3xl">×</button>
+            </div>
+            <form id="product-form" class="p-6 space-y-4">
+                <input type="hidden" id="product-id" value="">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Produk</label>
+                    <input type="text" id="product-name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Harga</label>
-                        <input type="number" id="productPrice" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Stok</label>
-                        <input type="number" id="productStock" required>
-                    </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Harga</label>
+                    <input type="number" id="product-price" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                 </div>
-                <div class="form-group">
-                    <label>Kategori</label>
-                    <select id="productCategory" required>
-                        <option value="">Pilih Kategori</option>
-                        <option value="Elektronik">Elektronik</option>
-                        <option value="Pakaian">Pakaian</option>
-                        <option value="Makanan">Makanan</option>
-                        <option value="Kesehatan">Kesehatan</option>
-                    </select>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Deskripsi</label>
+                    <textarea id="product-description" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
                 </div>
-                <div class="form-group">
-                    <label>Deskripsi</label>
-                    <textarea id="productDescription" rows="3" required></textarea>
-                </div>
-                <div style="display: flex; gap: 1rem;">
-                    <button type="submit" class="btn btn-primary" style="flex: 1;">Simpan</button>
-                    <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeProductModal()">Batal</button>
+                <div class="flex gap-3 pt-4">
+                    <button type="submit" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-red-700 transition font-semibold">
+                        Simpan
+                    </button>
+                    <button type="button" onclick="closeProductModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition font-semibold">
+                        Batal
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-        // Data Storage
-        let products = [
-            { id: 1, name: 'Laptop Dell', price: 5000000, stock: 10, category: 'Elektronik', description: 'Laptop gaming berperforma tinggi' },
-            { id: 2, name: 'Mouse Logitech', price: 250000, stock: 50, category: 'Elektronik', description: 'Mouse gaming wireless' },
-            { id: 3, name: 'T-Shirt Polos', price: 75000, stock: 100, category: 'Pakaian', description: 'T-shirt katun premium' }
-        ];
-
-        let orders = [
-            { id: 'ORD001', customer: 'Budi Santoso', product: 'Laptop Dell', qty: 1, total: 5000000, status: 'pending', date: '2025-12-09' },
-            { id: 'ORD002', customer: 'Siti Nurhaliza', product: 'Mouse Logitech', qty: 2, total: 500000, status: 'completed', date: '2025-12-08' },
-            { id: 'ORD003', customer: 'Ahmad Rahman', product: 'T-Shirt Polos', qty: 5, total: 375000, status: 'shipped', date: '2025-12-07' }
-        ];
-
-        let transactions = [
-            { id: 'TRX001', date: '2025-12-09', customer: 'Budi Santoso', product: 'Laptop Dell', qty: 1, total: 5000000, payment: 'Transfer Bank' },
-            { id: 'TRX002', date: '2025-12-08', customer: 'Siti Nurhaliza', product: 'Mouse Logitech', qty: 2, total: 500000, payment: 'E-Wallet' },
-            { id: 'TRX003', date: '2025-12-07', customer: 'Ahmad Rahman', product: 'T-Shirt Polos', qty: 5, total: 375000, payment: 'COD' }
-        ];
-
-        let editingProductId = null;
-
-        // Navigation
-        function showSection(sectionId) {
-            const sections = document.querySelectorAll('.content-section');
-            const navLinks = document.querySelectorAll('.nav-link');
-
-            sections.forEach(s => s.classList.remove('active'));
-            navLinks.forEach(n => n.classList.remove('active'));
-
-            document.getElementById(sectionId).classList.add('active');
-            event.target.classList.add('active');
-
-            if (sectionId === 'dashboard') {
-                updateDashboard();
-            } else if (sectionId === 'orders') {
-                displayOrders();
-            } else if (sectionId === 'products') {
-                displayProducts();
-            } else if (sectionId === 'transactions') {
-                displayTransactions();
+        let currentTab = 'orders';
+        
+        // Switch Tab
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Update tab buttons
+            document.getElementById('tab-orders').classList.remove('tab-active', 'text-primary');
+            document.getElementById('tab-products').classList.remove('tab-active', 'text-primary');
+            document.getElementById('tab-orders').classList.add('text-gray-600');
+            document.getElementById('tab-products').classList.add('text-gray-600');
+            
+            document.getElementById(`tab-${tab}`).classList.add('tab-active', 'text-primary');
+            document.getElementById(`tab-${tab}`).classList.remove('text-gray-600');
+            
+            // Show/hide content
+            document.getElementById('content-orders').classList.add('hidden');
+            document.getElementById('content-products').classList.add('hidden');
+            document.getElementById(`content-${tab}`).classList.remove('hidden');
+            
+            // Load data
+            if (tab === 'orders') {
+                loadOrders();
+            } else if (tab === 'products') {
+                loadProducts();
             }
         }
-
-        // Dashboard
-        function updateDashboard() {
-            const today = new Date().toISOString().split('T')[0];
-            const currentMonth = new Date().toISOString().slice(0, 7);
-            const currentYear = new Date().getFullYear();
-
-            let dailyRevenue = transactions.filter(t => t.date === today).reduce((sum, t) => sum + t.total, 0);
-            let monthlyRevenue = transactions.filter(t => t.date.startsWith(currentMonth)).reduce((sum, t) => sum + t.total, 0);
-            let yearlyRevenue = transactions.filter(t => t.date.startsWith(currentYear.toString())).reduce((sum, t) => sum + t.total, 0);
-
-            document.getElementById('dailyRevenue').textContent = 'Rp ' + formatCurrency(dailyRevenue);
-            document.getElementById('monthlyRevenue').textContent = 'Rp ' + formatCurrency(monthlyRevenue);
-            document.getElementById('yearlyRevenue').textContent = 'Rp ' + formatCurrency(yearlyRevenue);
-            document.getElementById('totalOrders').textContent = orders.length;
+        
+        // Load Orders
+        async function loadOrders() {
+            document.getElementById('orders-loading').classList.remove('hidden');
+            document.getElementById('orders-list').classList.add('hidden');
+            
+            try {
+                const response = await fetch('/api/admin/orders');
+                const data = await response.json();
+                
+                if (data.success) {
+                    renderOrders(data.orders);
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                alert('Gagal memuat pesanan!');
+            }
         }
-
-        // Orders
-        function displayOrders() {
-            const tbody = document.getElementById('ordersTable');
-            tbody.innerHTML = orders.map(order => `
-                <tr>
-                    <td><strong>${order.id}</strong></td>
-                    <td>${order.customer}</td>
-                    <td>${order.product}</td>
-                    <td>${order.qty}</td>
-                    <td>Rp ${formatCurrency(order.total)}</td>
-                    <td><span class="badge badge-${order.status}">${order.status}</span></td>
-                    <td>${order.date}</td>
-                    <td>
-                        <button class="btn btn-edit" onclick="updateOrderStatus('${order.id}')">Update</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function updateOrderStatus(orderId) {
-            const order = orders.find(o => o.id === orderId);
-            if (!order) return;
-
-            const statuses = ['pending', 'shipped', 'completed'];
-            const currentIndex = statuses.indexOf(order.status);
-            order.status = statuses[(currentIndex + 1) % statuses.length];
-
-            displayOrders();
-            alert('Status pesanan ' + orderId + ' diperbarui menjadi ' + order.status);
-        }
-
-        // Products
-        function displayProducts() {
-            const tbody = document.getElementById('productsTable');
-            tbody.innerHTML = products.map(product => `
-                <tr>
-                    <td>${product.id}</td>
-                    <td>${product.name}</td>
-                    <td>Rp ${formatCurrency(product.price)}</td>
-                    <td>${product.stock}</td>
-                    <td>${product.category}</td>
-                    <td>
-                        <button class="btn btn-edit" onclick="editProduct(${product.id})">Edit</button>
-                        <button class="btn btn-delete" onclick="deleteProduct(${product.id})">Hapus</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function openAddProductModal() {
-            editingProductId = null;
-            document.getElementById('modalTitle').textContent = 'Tambah Produk';
-            document.getElementById('productName').value = '';
-            document.getElementById('productPrice').value = '';
-            document.getElementById('productStock').value = '';
-            document.getElementById('productCategory').value = '';
-            document.getElementById('productDescription').value = '';
-            document.getElementById('productModal').classList.add('active');
-        }
-
-        function editProduct(id) {
-            const product = products.find(p => p.id === id);
-            if (!product) return;
-
-            editingProductId = id;
-            document.getElementById('modalTitle').textContent = 'Edit Produk';
-            document.getElementById('productName').value = product.name;
-            document.getElementById('productPrice').value = product.price;
-            document.getElementById('productStock').value = product.stock;
-            document.getElementById('productCategory').value = product.category;
-            document.getElementById('productDescription').value = product.description;
-            document.getElementById('productModal').classList.add('active');
-        }
-
-        function saveProduct(event) {
-            event.preventDefault();
-
-            const name = document.getElementById('productName').value;
-            const price = parseFloat(document.getElementById('productPrice').value);
-            const stock = parseInt(document.getElementById('productStock').value);
-            const category = document.getElementById('productCategory').value;
-            const description = document.getElementById('productDescription').value;
-
-            if (editingProductId) {
-                const product = products.find(p => p.id === editingProductId);
-                product.name = name;
-                product.price = price;
-                product.stock = stock;
-                product.category = category;
-                product.description = description;
-                alert('Produk berhasil diperbarui!');
+        
+        function renderOrders(orders) {
+            const container = document.getElementById('orders-list');
+            
+            if (orders.length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-500 py-8">Belum ada pesanan</p>';
             } else {
-                const newId = Math.max(...products.map(p => p.id), 0) + 1;
-                products.push({
-                    id: newId,
-                    name,
-                    price,
-                    stock,
-                    category,
-                    description
+                container.innerHTML = orders.map(order => `
+                    <div class="bg-white border border-gray-200 rounded-lg p-4 mb-4 hover:shadow-md transition">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <h3 class="text-lg font-bold text-gray-800">Order #${order.id}</h3>
+                                    <span class="px-3 py-1 rounded-full text-sm font-semibold ${getStatusBadgeClass(order.status)}">
+                                        ${order.status}
+                                    </span>
+                                </div>
+                                <p class="text-sm text-gray-600">Email: ${order.user_email || 'Guest'}</p>
+                                <p class="text-sm text-gray-600">Tanggal: ${new Date(order.tanggal).toLocaleString('id-ID')}</p>
+                                <p class="text-lg font-bold text-primary mt-2">Total: Rp ${order.total.toLocaleString('id-ID')}</p>
+                            </div>
+                            <button onclick="showOrderDetail(${order.id})" class="px-4 py-2 bg-secondary text-white rounded-lg hover:bg-accent transition">
+                                Lihat Detail
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            document.getElementById('orders-loading').classList.add('hidden');
+            container.classList.remove('hidden');
+        }
+        
+        function getStatusBadgeClass(status) {
+            switch(status) {
+                case 'pending': return 'bg-yellow-100 text-yellow-800';
+                case 'processing': return 'bg-blue-100 text-blue-800';
+                case 'completed': return 'bg-green-100 text-green-800';
+                case 'cancelled': return 'bg-red-100 text-red-800';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+        
+        // Show Order Detail
+        async function showOrderDetail(orderId) {
+            document.getElementById('modal-order-detail').classList.remove('hidden');
+            document.getElementById('order-detail-content').innerHTML = '<div class="text-center py-8"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>';
+            
+            try {
+                const response = await fetch(`/api/admin/orders/${orderId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    renderOrderDetail(data.order, data.items);
+                }
+            } catch (error) {
+                console.error('Error loading order detail:', error);
+                alert('Gagal memuat detail pesanan!');
+            }
+        }
+        
+        function renderOrderDetail(order, items) {
+            const content = `
+                <div class="space-y-6">
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h4 class="font-bold text-gray-800 mb-3">Informasi Pesanan</h4>
+                        <div class="grid grid-cols-2 gap-3 text-sm">
+                            <div><span class="text-gray-600">Order ID:</span> <strong>#${order.id}</strong></div>
+                            <div><span class="text-gray-600">Status:</span> <strong class="text-primary">${order.status}</strong></div>
+                            <div><span class="text-gray-600">Tanggal:</span> ${new Date(order.tanggal).toLocaleString('id-ID')}</div>
+                            <div><span class="text-gray-600">Total:</span> <strong class="text-lg text-primary">Rp ${order.total.toLocaleString('id-ID')}</strong></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h4 class="font-bold text-gray-800 mb-3">Informasi Pembeli</h4>
+                        <div class="text-sm space-y-1">
+                            <p><span class="text-gray-600">Email:</span> <strong>${order.user_email || '-'}</strong></p>
+                            <p><span class="text-gray-600">Alamat:</span> ${order.user_address || '-'}</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-bold text-gray-800 mb-3">Produk yang Dipesan</h4>
+                        <div class="space-y-3">
+                            ${items.map(item => `
+                                <div class="bg-white border border-gray-200 rounded-lg p-4">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h5 class="font-semibold text-gray-800">${item.nama_produk}</h5>
+                                            <p class="text-sm text-gray-600">Harga: Rp ${item.harga_produk.toLocaleString('id-ID')}</p>
+                                            <p class="text-sm text-gray-600">Jumlah: ${item.jumlah_produk}</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-lg font-bold text-primary">Rp ${item.total.toLocaleString('id-ID')}</p>
+                                            <span class="text-xs px-2 py-1 rounded-full ${getStatusBadgeClass(item.status_produk)}">${item.status_produk}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <label class="block font-bold text-gray-800 mb-3">Update Status Pesanan</label>
+                        <div class="flex gap-3">
+                            <select id="order-status-select" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>Processing</option>
+                                <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>Completed</option>
+                                <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                            </select>
+                            <button onclick="updateOrderStatus(${order.id})" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-red-700 transition font-semibold">
+                                Update
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('order-detail-content').innerHTML = content;
+        }
+        
+        function closeOrderDetailModal() {
+            document.getElementById('modal-order-detail').classList.add('hidden');
+        }
+        
+        async function updateOrderStatus(orderId) {
+            const status = document.getElementById('order-status-select').value;
+            
+            try {
+                const response = await fetch(`/api/admin/orders/${orderId}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
                 });
-                alert('Produk berhasil ditambahkan!');
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Status berhasil diupdate!');
+                    closeOrderDetailModal();
+                    loadOrders();
+                } else {
+                    alert(data.message || 'Gagal update status!');
+                }
+            } catch (error) {
+                console.error('Error updating status:', error);
+                alert('Gagal update status!');
             }
-
-            closeProductModal();
-            displayProducts();
         }
-
-        function deleteProduct(id) {
-            if (confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
-                products = products.filter(p => p.id !== id);
-                alert('Produk berhasil dihapus!');
-                displayProducts();
+        
+        // Load Products
+        async function loadProducts() {
+            document.getElementById('products-loading').classList.remove('hidden');
+            document.getElementById('products-list').classList.add('hidden');
+            
+            try {
+                const response = await fetch('/api/admin/products');
+                const data = await response.json();
+                
+                if (data.success) {
+                    renderProducts(data.products);
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+                alert('Gagal memuat produk!');
             }
         }
-
+        
+        function renderProducts(products) {
+            const container = document.getElementById('products-list');
+            
+            if (products.length === 0) {
+                container.innerHTML = '<p class="col-span-full text-center text-gray-500 py-8">Belum ada produk</p>';
+            } else {
+                container.innerHTML = products.map(product => `
+                    <div class="bg-white border border-gray-200 rounded-lg p-5 hover:shadow-lg transition">
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">${product.name}</h3>
+                        <p class="text-2xl font-bold text-primary mb-3">Rp ${product.price.toLocaleString('id-ID')}</p>
+                        <p class="text-sm text-gray-600 mb-4">${product.description || 'Tidak ada deskripsi'}</p>
+                        <div class="flex gap-2">
+                            <button onclick="editProduct(${product.id}, '${product.name}', ${product.price}, '${product.description || ''}')" class="flex-1 px-3 py-2 bg-secondary text-white rounded-lg hover:bg-accent transition text-sm font-semibold">
+                                Edit
+                            </button>
+                            <button onclick="deleteProduct(${product.id}, '${product.name}')" class="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition text-sm font-semibold">
+                                Hapus
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            document.getElementById('products-loading').classList.add('hidden');
+            container.classList.remove('hidden');
+        }
+        
+        function showAddProductModal() {
+            document.getElementById('product-modal-title').textContent = 'Tambah Produk';
+            document.getElementById('product-id').value = '';
+            document.getElementById('product-name').value = '';
+            document.getElementById('product-price').value = '';
+            document.getElementById('product-description').value = '';
+            document.getElementById('modal-product').classList.remove('hidden');
+        }
+        
+        function editProduct(id, name, price, description) {
+            document.getElementById('product-modal-title').textContent = 'Edit Produk';
+            document.getElementById('product-id').value = id;
+            document.getElementById('product-name').value = name;
+            document.getElementById('product-price').value = price;
+            document.getElementById('product-description').value = description;
+            document.getElementById('modal-product').classList.remove('hidden');
+        }
+        
         function closeProductModal() {
-            document.getElementById('productModal').classList.remove('active');
+            document.getElementById('modal-product').classList.add('hidden');
         }
-
-        // Transactions
-        function displayTransactions() {
-            const tbody = document.getElementById('transactionsTable');
-            tbody.innerHTML = transactions.map(trans => `
-                <tr>
-                    <td><strong>${trans.id}</strong></td>
-                    <td>${trans.date}</td>
-                    <td>${trans.customer}</td>
-                    <td>${trans.product}</td>
-                    <td>${trans.qty}</td>
-                    <td>Rp ${formatCurrency(trans.total)}</td>
-                    <td>${trans.payment}</td>
-                </tr>
-            `).join('');
+        
+        document.getElementById('product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const id = document.getElementById('product-id').value;
+            const name = document.getElementById('product-name').value;
+            const price = document.getElementById('product-price').value;
+            const description = document.getElementById('product-description').value;
+            
+            const url = id ? `/api/admin/products/${id}` : '/api/admin/products';
+            const method = id ? 'PUT' : 'POST';
+            
+            try {
+                const response = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, price, description })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(data.message);
+                    closeProductModal();
+                    loadProducts();
+                } else {
+                    alert(data.message || 'Gagal menyimpan produk!');
+                }
+            } catch (error) {
+                console.error('Error saving product:', error);
+                alert('Gagal menyimpan produk!');
+            }
+        });
+        
+        async function deleteProduct(id, name) {
+            if (!confirm(`Yakin ingin menghapus produk "${name}"?`)) return;
+            
+            try {
+                const response = await fetch(`/api/admin/products/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(data.message);
+                    loadProducts();
+                } else {
+                    alert(data.message || 'Gagal menghapus produk!');
+                }
+            } catch (error) {
+                console.error('Error deleting product:', error);
+                alert('Gagal menghapus produk!');
+            }
         }
-
-        function exportTransactions() {
-            alert('Fitur export PDF sedang dikembangkan!');
-        }
-
-        // Utility
-        function formatCurrency(num) {
-            return new Intl.NumberFormat('id-ID').format(num);
-        }
-
-        // function logout() {
-        //     if (confirm('Apakah Anda yakin ingin logout?')) {
-        //         alert('Anda telah logout!');
-        //         // Redirect ke halaman login
-        //         // window.location.href = 'login.html';
-        //     }
-        // }
-
-        // Initialize
-        window.addEventListener('load', () => {
-            displayProducts();
-            displayOrders();
-            displayTransactions();
-            updateDashboard();
+        
+        // Load initial data
+        document.addEventListener('DOMContentLoaded', () => {
+            loadOrders();
         });
     </script>
 </body>
