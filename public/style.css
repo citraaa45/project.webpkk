@@ -143,9 +143,10 @@ html {
     top: 0;
     right: -400px;
     width: 350px;
-    height: 100vh;
+    height: 350px;
     background: rgb(235, 203, 122);
     box-shadow: -10px 0 10px rgba(0, 0, 0, 0.3);
+    border-radius: 50px;
     padding: 20px;
     transition: right 0.3s ease;
     z-index: 2000;

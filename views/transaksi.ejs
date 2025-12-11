@@ -403,6 +403,12 @@
     window.onload = function() {
         updateTotal();
     };
+
+    // Ambil ID Pembeli dari localStorage
+    let userId = localStorage.getItem("userID");
+
+    // Tampilkan otomatis ke input
+    document.getElementById("idPembeli").value = userId;
 </script>
 
 </body>
