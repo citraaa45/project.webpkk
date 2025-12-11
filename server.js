@@ -535,6 +535,13 @@ app.use((err, req, res, next) => {
   res.status(500).send("Terjadi kesalahan server!");
 });
 
+// Handler 404
+app.use((req, res) => {
+  res.status(404).render("404", {
+    title: "404 - Halaman Tidak Ditemukan"
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server berjalan di http://localhost:${port}`);
 });
