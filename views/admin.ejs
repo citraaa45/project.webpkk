@@ -63,6 +63,9 @@
                 <button onclick="switchTab('products')" id="tab-products" class="px-6 py-4 font-semibold text-lg text-gray-600 hover:text-primary focus:outline-none transition">
                     🍜 Produk
                 </button>
+                <button onclick="switchTab('reports')" id="tab-reports" class="px-6 py-4 font-semibold text-lg text-gray-600 hover:text-primary focus:outline-none transition">
+                    📊 Laporan
+                </button>
             </div>
 
             <!-- Orders Tab -->
@@ -72,6 +75,27 @@
                     <button onclick="loadOrders()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-red-700 transition">
                         🔄 Refresh
                     </button>
+                </div>
+                
+                <!-- Filter Section -->
+                <div class="bg-white border border-gray-200 rounded-lg p-4 mb-6">
+                    <h3 class="font-semibold text-gray-800 mb-3">🔍 Filter Berdasarkan Tanggal</h3>
+                    <div class="flex flex-wrap gap-4 items-end">
+                        <div class="flex-1 min-w-[200px]">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Dari Tanggal</label>
+                            <input type="date" id="order-start-date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        <div class="flex-1 min-w-[200px]">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Sampai Tanggal</label>
+                            <input type="date" id="order-end-date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        <button onclick="filterOrders()" class="px-6 py-2 bg-secondary text-white rounded-lg hover:bg-accent transition font-semibold">
+                            Terapkan Filter
+                        </button>
+                        <button onclick="resetOrderFilter()" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition font-semibold">
+                            Reset
+                        </button>
+                    </div>
                 </div>
                 
                 <div id="orders-loading" class="text-center py-12">
@@ -100,6 +124,129 @@
                 
                 <div id="products-list" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Products will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="content-reports" class="p-6 hidden">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">📊 Laporan Penjualan & Keuntungan</h2>
+                
+                <!-- Filter Section -->
+                <div class="bg-white border border-gray-200 rounded-lg p-4 mb-6">
+                    <h3 class="font-semibold text-gray-800 mb-3">Filter Periode</h3>
+                    <div class="flex flex-wrap gap-4 items-end">
+                        <div class="flex-1 min-w-[200px]">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Periode</label>
+                            <select id="report-period" onchange="toggleCustomDateInputs()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option value="day">Per Hari</option>
+                                <option value="week">Per Minggu</option>
+                                <option value="month">Per Bulan</option>
+                                <option value="year">Per Tahun</option>
+                                <option value="custom">Kustom</option>
+                            </select>
+                        </div>
+                        <div class="flex-1 min-w-[200px]" id="report-start-date-container">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Dari Tanggal</label>
+                            <input type="date" id="report-start-date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        <div class="flex-1 min-w-[200px]" id="report-end-date-container">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Sampai Tanggal</label>
+                            <input type="date" id="report-end-date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        <button onclick="loadReports()" class="px-6 py-2 bg-secondary text-white rounded-lg hover:bg-accent transition font-semibold">
+                            Tampilkan Laporan
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Summary Cards -->
+                <div id="report-summary" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 hidden">
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg p-5 shadow-lg">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm opacity-90">Total Pesanan</span>
+                            <span class="text-2xl">📦</span>
+                        </div>
+                        <p id="summary-total-orders" class="text-3xl font-bold">0</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-lg p-5 shadow-lg">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm opacity-90">Total Pendapatan</span>
+                            <span class="text-2xl">💰</span>
+                        </div>
+                        <p id="summary-total-revenue" class="text-2xl font-bold">Rp 0</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-lg p-5 shadow-lg">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm opacity-90">Rata-rata Nilai Order</span>
+                            <span class="text-2xl">📊</span>
+                        </div>
+                        <p id="summary-avg-order" class="text-2xl font-bold">Rp 0</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-lg p-5 shadow-lg">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm opacity-90">Total Periode</span>
+                            <span class="text-2xl">📅</span>
+                        </div>
+                        <p id="summary-periods" class="text-3xl font-bold">0</p>
+                    </div>
+                </div>
+
+                <!-- Sales Chart -->
+                <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6 hidden" id="sales-chart-container">
+                    <h3 class="font-bold text-gray-800 mb-4 text-xl">Grafik Penjualan</h3>
+                    <div id="sales-chart" class="overflow-x-auto">
+                        <!-- Chart will be rendered here -->
+                    </div>
+                </div>
+
+                <!-- Sales Table -->
+                <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6 hidden" id="sales-table-container">
+                    <h3 class="font-bold text-gray-800 mb-4 text-xl">Detail Penjualan per Periode</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-gray-50 border-b-2 border-gray-200">
+                                <tr>
+                                    <th class="px-4 py-3 text-left font-semibold text-gray-700">Periode</th>
+                                    <th class="px-4 py-3 text-right font-semibold text-gray-700">Jumlah Pesanan</th>
+                                    <th class="px-4 py-3 text-right font-semibold text-gray-700">Total Pendapatan</th>
+                                    <th class="px-4 py-3 text-right font-semibold text-gray-700">Rata-rata Order</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sales-table-body">
+                                <!-- Table rows will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Top Products -->
+                <div class="bg-white border border-gray-200 rounded-lg p-6 hidden" id="top-products-container">
+                    <h3 class="font-bold text-gray-800 mb-4 text-xl">🏆 Produk Terlaris</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-gray-50 border-b-2 border-gray-200">
+                                <tr>
+                                    <th class="px-4 py-3 text-left font-semibold text-gray-700">Ranking</th>
+                                    <th class="px-4 py-3 text-left font-semibold text-gray-700">Nama Produk</th>
+                                    <th class="px-4 py-3 text-right font-semibold text-gray-700">Jumlah Terjual</th>
+                                    <th class="px-4 py-3 text-right font-semibold text-gray-700">Total Pendapatan</th>
+                                    <th class="px-4 py-3 text-right font-semibold text-gray-700">Jumlah Order</th>
+                                </tr>
+                            </thead>
+                            <tbody id="top-products-body">
+                                <!-- Table rows will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="reports-loading" class="text-center py-12">
+                    <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                    <p class="mt-4 text-gray-600">Memuat laporan...</p>
+                </div>
+
+                <div id="reports-empty" class="text-center py-12 text-gray-500">
+                    Pilih periode dan klik "Tampilkan Laporan" untuk melihat data
                 </div>
             </div>
         </div>
@@ -161,8 +308,10 @@
             // Update tab buttons
             document.getElementById('tab-orders').classList.remove('tab-active', 'text-primary');
             document.getElementById('tab-products').classList.remove('tab-active', 'text-primary');
+            document.getElementById('tab-reports').classList.remove('tab-active', 'text-primary');
             document.getElementById('tab-orders').classList.add('text-gray-600');
             document.getElementById('tab-products').classList.add('text-gray-600');
+            document.getElementById('tab-reports').classList.add('text-gray-600');
             
             document.getElementById(`tab-${tab}`).classList.add('tab-active', 'text-primary');
             document.getElementById(`tab-${tab}`).classList.remove('text-gray-600');
@@ -170,6 +319,7 @@
             // Show/hide content
             document.getElementById('content-orders').classList.add('hidden');
             document.getElementById('content-products').classList.add('hidden');
+            document.getElementById('content-reports').classList.add('hidden');
             document.getElementById(`content-${tab}`).classList.remove('hidden');
             
             // Load data
@@ -177,16 +327,24 @@
                 loadOrders();
             } else if (tab === 'products') {
                 loadProducts();
+            } else if (tab === 'reports') {
+                // Reports loaded on demand
             }
         }
         
-        // Load Orders
-        async function loadOrders() {
+        // Load Orders with optional date filter
+        async function loadOrders(startDate = null, endDate = null) {
             document.getElementById('orders-loading').classList.remove('hidden');
             document.getElementById('orders-list').classList.add('hidden');
             
             try {
-                const response = await fetch('/api/admin/orders');
+                let url = '/api/admin/orders';
+                const params = new URLSearchParams();
+                if (startDate) params.append('startDate', startDate);
+                if (endDate) params.append('endDate', endDate);
+                if (params.toString()) url += '?' + params.toString();
+                
+                const response = await fetch(url);
                 const data = await response.json();
                 
                 if (data.success) {
@@ -196,6 +354,18 @@
                 console.error('Error loading orders:', error);
                 alert('Gagal memuat pesanan!');
             }
+        }
+        
+        function filterOrders() {
+            const startDate = document.getElementById('order-start-date').value;
+            const endDate = document.getElementById('order-end-date').value;
+            loadOrders(startDate, endDate);
+        }
+        
+        function resetOrderFilter() {
+            document.getElementById('order-start-date').value = '';
+            document.getElementById('order-end-date').value = '';
+            loadOrders();
         }
         
         function renderOrders(orders) {
@@ -470,6 +640,176 @@
                 alert('Gagal menghapus produk!');
             }
         }
+        
+        // Reports Functions
+        function toggleCustomDateInputs() {
+            const period = document.getElementById('report-period').value;
+            const startContainer = document.getElementById('report-start-date-container');
+            const endContainer = document.getElementById('report-end-date-container');
+            
+            if (period === 'custom') {
+                startContainer.classList.remove('hidden');
+                endContainer.classList.remove('hidden');
+            } else {
+                startContainer.classList.add('hidden');
+                endContainer.classList.add('hidden');
+            }
+        }
+        
+        async function loadReports() {
+            const period = document.getElementById('report-period').value;
+            const startDate = document.getElementById('report-start-date').value;
+            const endDate = document.getElementById('report-end-date').value;
+            
+            // Hide empty state, show loading
+            document.getElementById('reports-empty').classList.add('hidden');
+            document.getElementById('reports-loading').classList.remove('hidden');
+            document.getElementById('report-summary').classList.add('hidden');
+            document.getElementById('sales-chart-container').classList.add('hidden');
+            document.getElementById('sales-table-container').classList.add('hidden');
+            document.getElementById('top-products-container').classList.add('hidden');
+            
+            try {
+                // Build query params
+                const params = new URLSearchParams({ period });
+                if (startDate) params.append('startDate', startDate);
+                if (endDate) params.append('endDate', endDate);
+                
+                // Load sales report
+                const salesResponse = await fetch(`/api/admin/reports/sales?${params.toString()}`);
+                const salesData = await salesResponse.json();
+                
+                // Load top products
+                const productsParams = new URLSearchParams();
+                if (startDate) productsParams.append('startDate', startDate);
+                if (endDate) productsParams.append('endDate', endDate);
+                const productsResponse = await fetch(`/api/admin/reports/top-products?${productsParams.toString()}`);
+                const productsData = await productsResponse.json();
+                
+                if (salesData.success) {
+                    renderSalesReport(salesData.reports, salesData.summary, period);
+                }
+                
+                if (productsData.success) {
+                    renderTopProducts(productsData.products);
+                }
+                
+                document.getElementById('reports-loading').classList.add('hidden');
+            } catch (error) {
+                console.error('Error loading reports:', error);
+                alert('Gagal memuat laporan!');
+                document.getElementById('reports-loading').classList.add('hidden');
+                document.getElementById('reports-empty').classList.remove('hidden');
+            }
+        }
+        
+        function renderSalesReport(reports, summary, period) {
+            // Show summary cards
+            document.getElementById('report-summary').classList.remove('hidden');
+            document.getElementById('summary-total-orders').textContent = summary.totalOrders.toLocaleString('id-ID');
+            document.getElementById('summary-total-revenue').textContent = 'Rp ' + summary.totalRevenue.toLocaleString('id-ID');
+            document.getElementById('summary-avg-order').textContent = 'Rp ' + Math.round(summary.avgOrderValue).toLocaleString('id-ID');
+            document.getElementById('summary-periods').textContent = reports.length.toLocaleString('id-ID');
+            
+            // Render table
+            if (reports.length > 0) {
+                document.getElementById('sales-table-container').classList.remove('hidden');
+                const tableBody = document.getElementById('sales-table-body');
+                tableBody.innerHTML = reports.map((row, index) => {
+                    let periodLabel = row.period;
+                    if (period === 'week') {
+                        periodLabel = `Minggu ${row.period}`;
+                    } else if (period === 'month') {
+                        periodLabel = formatMonth(row.period);
+                    } else if (period === 'year') {
+                        periodLabel = `Tahun ${row.period}`;
+                    } else {
+                        periodLabel = formatDate(row.period);
+                    }
+                    
+                    return `
+                        <tr class="${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}">
+                            <td class="px-4 py-3 text-left">${periodLabel}</td>
+                            <td class="px-4 py-3 text-right font-semibold">${row.total_orders}</td>
+                            <td class="px-4 py-3 text-right font-semibold text-green-600">Rp ${parseFloat(row.total_revenue).toLocaleString('id-ID')}</td>
+                            <td class="px-4 py-3 text-right">Rp ${parseFloat(row.avg_order_value).toLocaleString('id-ID')}</td>
+                        </tr>
+                    `;
+                }).join('');
+                
+                // Render simple bar chart
+                document.getElementById('sales-chart-container').classList.remove('hidden');
+                renderSimpleChart(reports, period);
+            }
+        }
+        
+        function renderSimpleChart(reports, period) {
+            const maxRevenue = Math.max(...reports.map(r => parseFloat(r.total_revenue)));
+            const chartHTML = reports.slice(0, 20).map(row => {
+                const percentage = (parseFloat(row.total_revenue) / maxRevenue) * 100;
+                let periodLabel = row.period;
+                
+                if (period === 'week') {
+                    periodLabel = `W${row.period}`;
+                } else if (period === 'month') {
+                    periodLabel = row.period;
+                } else if (period === 'year') {
+                    periodLabel = row.period;
+                } else {
+                    periodLabel = formatDate(row.period);
+                }
+                
+                return `
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm font-medium text-gray-700">${periodLabel}</span>
+                            <span class="text-sm font-bold text-primary">Rp ${parseFloat(row.total_revenue).toLocaleString('id-ID')}</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-6 relative overflow-hidden">
+                            <div class="bg-gradient-to-r from-primary to-accent h-6 rounded-full transition-all duration-500 flex items-center justify-end pr-2" style="width: ${percentage}%">
+                                <span class="text-xs text-white font-semibold">${row.total_orders} order</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('sales-chart').innerHTML = chartHTML;
+        }
+        
+        function renderTopProducts(products) {
+            if (products.length > 0) {
+                document.getElementById('top-products-container').classList.remove('hidden');
+                const tableBody = document.getElementById('top-products-body');
+                tableBody.innerHTML = products.map((product, index) => `
+                    <tr class="${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}">
+                        <td class="px-4 py-3 text-center">
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full ${index < 3 ? 'bg-gradient-to-br from-yellow-400 to-yellow-600 text-white' : 'bg-gray-200 text-gray-700'} font-bold text-sm">
+                                ${index + 1}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 text-left font-semibold">${product.nama_produk}</td>
+                        <td class="px-4 py-3 text-right font-semibold">${product.total_quantity} pcs</td>
+                        <td class="px-4 py-3 text-right font-semibold text-green-600">Rp ${parseFloat(product.total_revenue).toLocaleString('id-ID')}</td>
+                        <td class="px-4 py-3 text-right">${product.order_count} order</td>
+                    </tr>
+                `).join('');
+            }
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+        
+        function formatMonth(monthString) {
+            const [year, month] = monthString.split('-');
+            const date = new Date(year, month - 1);
+            return date.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+        }
+        
+        // Initialize
+        toggleCustomDateInputs();
         
         // Load initial data
         document.addEventListener('DOMContentLoaded', () => {

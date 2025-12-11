@@ -11,6 +11,7 @@
     "nodemon": "^3.1.11"
   },
   "scripts": {
+    "postinstall": "node config/setup.js",
     "start": "nodemon server.js",
     "dev": "node server.js"
   }

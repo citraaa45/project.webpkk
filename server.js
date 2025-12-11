@@ -265,15 +265,32 @@ app.get("/admin", isAdmin, async (req, res) => {
   }
 });
 
-// API: Get all orders for admin
+// API: Get all orders for admin with date filter
 app.get("/api/admin/orders", isAdmin, async (req, res) => {
   try {
-    const [orders] = await db.query(`
+    const { startDate, endDate } = req.query;
+    
+    let query = `
       SELECT o.*, u.email as user_email 
       FROM orders o 
       LEFT JOIN users u ON o.id_user = u.id 
-      ORDER BY o.tanggal DESC
-    `);
+    `;
+    const params = [];
+    
+    if (startDate && endDate) {
+      query += ` WHERE DATE(o.tanggal) BETWEEN ? AND ?`;
+      params.push(startDate, endDate);
+    } else if (startDate) {
+      query += ` WHERE DATE(o.tanggal) >= ?`;
+      params.push(startDate);
+    } else if (endDate) {
+      query += ` WHERE DATE(o.tanggal) <= ?`;
+      params.push(endDate);
+    }
+    
+    query += ` ORDER BY o.tanggal DESC`;
+    
+    const [orders] = await db.query(query, params);
     res.json({ success: true, orders });
   } catch (error) {
     console.error("Error get orders:", error);
@@ -383,6 +400,132 @@ app.delete("/api/admin/products/:id", isAdmin, async (req, res) => {
     res.json({ success: true, message: "Produk berhasil dihapus!" });
   } catch (error) {
     console.error("Error delete product:", error);
+    res.status(500).json({ success: false, message: "Terjadi kesalahan server!" });
+  }
+});
+
+// API: Get sales report
+app.get("/api/admin/reports/sales", isAdmin, async (req, res) => {
+  try {
+    const { period, startDate, endDate } = req.query;
+    
+    let dateFilter = "";
+    let groupBy = "";
+    let dateFormat = "";
+    const params = [];
+    
+    if (period === "day") {
+      dateFormat = "DATE(o.tanggal)";
+      groupBy = "DATE(o.tanggal)";
+      if (startDate && endDate) {
+        dateFilter = "WHERE DATE(o.tanggal) BETWEEN ? AND ?";
+        params.push(startDate, endDate);
+      }
+    } else if (period === "week") {
+      dateFormat = "YEARWEEK(o.tanggal, 1)";
+      groupBy = "YEARWEEK(o.tanggal, 1)";
+      if (startDate && endDate) {
+        dateFilter = "WHERE DATE(o.tanggal) BETWEEN ? AND ?";
+        params.push(startDate, endDate);
+      }
+    } else if (period === "month") {
+      dateFormat = "DATE_FORMAT(o.tanggal, '%Y-%m')";
+      groupBy = "DATE_FORMAT(o.tanggal, '%Y-%m')";
+      if (startDate && endDate) {
+        dateFilter = "WHERE DATE(o.tanggal) BETWEEN ? AND ?";
+        params.push(startDate, endDate);
+      }
+    } else if (period === "year") {
+      dateFormat = "YEAR(o.tanggal)";
+      groupBy = "YEAR(o.tanggal)";
+      if (startDate && endDate) {
+        dateFilter = "WHERE DATE(o.tanggal) BETWEEN ? AND ?";
+        params.push(startDate, endDate);
+      }
+    } else if (period === "custom" && startDate && endDate) {
+      dateFormat = "DATE(o.tanggal)";
+      groupBy = "DATE(o.tanggal)";
+      dateFilter = "WHERE DATE(o.tanggal) BETWEEN ? AND ?";
+      params.push(startDate, endDate);
+    } else {
+      // Default: all time by day
+      dateFormat = "DATE(o.tanggal)";
+      groupBy = "DATE(o.tanggal)";
+    }
+    
+    const query = `
+      SELECT 
+        ${dateFormat} as period,
+        COUNT(o.id) as total_orders,
+        SUM(o.total) as total_revenue,
+        AVG(o.total) as avg_order_value,
+        COUNT(DISTINCT o.id_user) as unique_customers
+      FROM orders o
+      ${dateFilter}
+      GROUP BY ${groupBy}
+      ORDER BY period DESC
+    `;
+    
+    const [results] = await db.query(query, params);
+    
+    // Calculate summary
+    const summary = {
+      totalOrders: 0,
+      totalRevenue: 0,
+      avgOrderValue: 0,
+      uniqueCustomers: 0
+    };
+    
+    results.forEach(row => {
+      summary.totalOrders += row.total_orders;
+      summary.totalRevenue += parseFloat(row.total_revenue);
+    });
+    
+    if (results.length > 0) {
+      summary.avgOrderValue = summary.totalRevenue / summary.totalOrders;
+    }
+    
+    res.json({ success: true, reports: results, summary });
+  } catch (error) {
+    console.error("Error get sales report:", error);
+    res.status(500).json({ success: false, message: "Terjadi kesalahan server!" });
+  }
+});
+
+// API: Get top products
+app.get("/api/admin/reports/top-products", isAdmin, async (req, res) => {
+  try {
+    const { startDate, endDate, limit = 10 } = req.query;
+    
+    let dateFilter = "";
+    const params = [];
+    
+    if (startDate && endDate) {
+      dateFilter = "WHERE DATE(o.tanggal) BETWEEN ? AND ?";
+      params.push(startDate, endDate);
+    }
+    
+    params.push(parseInt(limit));
+    
+    const query = `
+      SELECT 
+        oi.nama_produk,
+        SUM(oi.jumlah_produk) as total_quantity,
+        SUM(oi.total) as total_revenue,
+        COUNT(DISTINCT oi.order_id) as order_count
+      FROM order_items oi
+      JOIN orders o ON oi.order_id = o.id
+      ${dateFilter}
+      GROUP BY oi.nama_produk
+      ORDER BY total_revenue DESC
+      LIMIT ?
+    `;
+    
+    const [results] = await db.query(query, params);
+    
+    res.json({ success: true, products: results });
+  } catch (error) {
+    console.error("Error get top products:", error);
     res.status(500).json({ success: false, message: "Terjadi kesalahan server!" });
   }
 });

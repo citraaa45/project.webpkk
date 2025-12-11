@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 10 Des 2025 pada 16.23
+-- Waktu pembuatan: 11 Des 2025 pada 09.46
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.4.5
 
@@ -21,21 +21,80 @@ SET time_zone = "+00:00";
 -- Database: `db_ritsu`
 --
 DROP DATABASE IF EXISTS `db_ritsu`;
-CREATE DATABASE `db_ritsu` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE IF NOT EXISTS `db_ritsu` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `db_ritsu`;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `orders`
+--
+
+DROP TABLE IF EXISTS `orders`;
+CREATE TABLE IF NOT EXISTS `orders` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_user` int(11) NOT NULL,
+  `tanggal` datetime NOT NULL,
+  `total` decimal(10,2) NOT NULL,
+  `status` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_user` (`id_user`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- RELATIONSHIPS FOR TABLE `orders`:
+--   `id_user`
+--       `users` -> `id`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `order_items`
+--
+
+DROP TABLE IF EXISTS `order_items`;
+CREATE TABLE IF NOT EXISTS `order_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  `harga_produk` decimal(10,2) NOT NULL,
+  `jumlah_produk` int(11) NOT NULL,
+  `total` decimal(10,2) NOT NULL,
+  `status_produk` varchar(50) NOT NULL,
+  `nama_produk` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `order_id` (`order_id`),
+  KEY `id_user` (`id_user`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- RELATIONSHIPS FOR TABLE `order_items`:
+--   `order_id`
+--       `orders` -> `id`
+--   `id_user`
+--       `users` -> `id`
+--
+
 -- --------------------------------------------------------
 
 --
 -- Struktur dari tabel `products`
 --
 
-CREATE TABLE `products` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `products`;
+CREATE TABLE IF NOT EXISTS `products` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `price` float NOT NULL,
   `imageUrl` text NOT NULL,
-  `description` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `description` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- RELATIONSHIPS FOR TABLE `products`:
+--
 
 --
 -- Dumping data untuk tabel `products`
@@ -52,13 +111,19 @@ INSERT INTO `products` (`id`, `name`, `price`, `imageUrl`, `description`) VALUES
 -- Struktur dari tabel `users`
 --
 
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `role` enum('user','admin','','') NOT NULL,
-  `address` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `address` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- RELATIONSHIPS FOR TABLE `users`:
+--
 
 --
 -- Dumping data untuk tabel `users`
@@ -68,56 +133,23 @@ INSERT INTO `users` (`id`, `email`, `password`, `role`, `address`) VALUES
 (1, 'admin@gmail.com', 'admin123', 'admin', 'Jl. Admin No. 123'),
 (2, 'user@gmail.com', 'user123', 'user', 'Jl. User No. 456');
 
+--
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+--
 
 --
--- Indeks untuk tabel `products`
+-- Ketidakleluasaan untuk tabel `orders`
 --
-ALTER TABLE `products`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`);
 
 --
--- Indeks untuk tabel `users`
+-- Ketidakleluasaan untuk tabel `order_items`
 --
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
-
--- AUTO_INCREMENT untuk tabel `products`
---
-ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT untuk tabel `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 COMMIT;
-
-
--- Tabel orders
-CREATE TABLE orders (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    id_user INT NOT NULL,
-    tanggal DATETIME NOT NULL,
-    total DECIMAL(10, 2) NOT NULL,
-    status VARCHAR(50) NOT NULL,
-    FOREIGN KEY (id_user) REFERENCES users(id)
-);
-
--- Tabel order_items
-CREATE TABLE order_items (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT NOT NULL,
-    id_user INT NOT NULL,
-    harga_produk DECIMAL(10, 2) NOT NULL,
-    jumlah_produk INT NOT NULL,
-    total DECIMAL(10, 2) NOT NULL,
-    status_produk VARCHAR(50) NOT NULL,
-    nama_produk VARCHAR(100) NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES orders(id),
-    FOREIGN KEY (id_user) REFERENCES users(id) -- Asumsi ada tabel pembeli dengan kolom id_pembeli
-);
-
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
